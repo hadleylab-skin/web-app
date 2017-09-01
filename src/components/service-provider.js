@@ -1,7 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
 import _ from 'lodash';
-import services from 'services';
+import services from '../services';
 
 function initServices(token) {
     let initializedServices = {};
@@ -28,7 +27,7 @@ export class ServiceProvider extends React.Component {
     render() {
         const { services, ...props } = this.props; // eslint-disable-line
         return (
-            <View {...props} />
+            <div {...props} />
         );
     }
 }

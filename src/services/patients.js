@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import CryptoJS from 'crypto-js';
 import { buildGetService, buildPostService, defaultHeaders, wrapItemsAsRemoteData, hydrateImage } from './base';
-import { encryptAES, encryptRSA, decryptAES, decryptRSA } from './keypair';
+
+const { encryptAES, encryptRSA, decryptAES, decryptRSA } = {};
+const CryptoJS = {};
 
 function dehydrateConsent(item) {
     return _.merge(
@@ -96,7 +97,8 @@ export function getPatientService({ token }) {
 
     return (patientPk, cursor) => {
         const service = buildGetService(`/api/v1/patient/${patientPk}/`,
-            dehydratePatientData,
+            // dehydratePatientData,
+            _.identity,
             _.merge({}, defaultHeaders, headers));
 
         return service(cursor);

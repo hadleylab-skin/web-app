@@ -18,7 +18,6 @@ import { patientsService,
 
 
 export default {
-    mrnScanerService,
     updateDoctorService,
     getDoctorService,
     getPatientMolesService,
