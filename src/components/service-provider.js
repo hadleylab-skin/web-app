@@ -25,7 +25,7 @@ export class ServiceProvider extends React.Component {
     }
 
     render() {
-        const { services, ...props } = this.props; // eslint-disable-line
+        const { services, token, ...props } = this.props; // eslint-disable-line
         return (
             <div {...props} />
         );

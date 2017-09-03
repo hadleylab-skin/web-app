@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import schema from '../../libs/state';
 
 const model = (props, context) => ({
@@ -16,10 +17,25 @@ export const PatientList = schema(model)(React.createClass({
     },
 
     render() {
+        const patients = this.props.tree.patients.get();
+        if (patients.status !== 'Succeed') {
+            return (
+                <div>
+                    {JSON.stringify(this.props.tree.patients.get())}
+                </div>
+            );
+        }
         return (
-            <div>
-                {JSON.stringify(this.props.tree.patients.get())}
-            </div>
+            <table>
+                <tbody>
+                    <tr><th>first name</th><th>last name</th></tr>
+                    {_.map(patients.data, (patient) => (
+                        <tr key={patient.data.pk}>
+                            <td>{patient.data.firstName}</td><td>{patient.data.lastName}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         );
     },
 }));

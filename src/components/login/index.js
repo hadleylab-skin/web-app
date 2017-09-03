@@ -10,7 +10,6 @@ const model = {
             username: '',
             password: '',
         },
-        formState: {},
         token: {},
         patientList: {},
     },
@@ -18,11 +17,10 @@ const model = {
 
 
 export const LoginForm = schema(model)(React.createClass({
-    async submit() {
-        let result = await loginService(
+    submit() {
+        loginService(
             this.props.tree.token,
             this.props.tree.form.get());
-        console.log(result);
     },
 
     render() {
@@ -32,7 +30,7 @@ export const LoginForm = schema(model)(React.createClass({
         if (token.status === 'Succeed') {
             return (
                 <ServiceProvider
-                    toke={token.data}
+                    token={token.data}
                 >
                     <PatientList tree={this.props.tree.patientList} />
                 </ServiceProvider>

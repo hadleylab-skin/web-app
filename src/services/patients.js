@@ -1,8 +1,7 @@
 import _ from 'lodash';
+import CryptoJS from 'crypto-js';
 import { buildGetService, buildPostService, defaultHeaders, wrapItemsAsRemoteData, hydrateImage } from './base';
-
-const { encryptAES, encryptRSA, decryptAES, decryptRSA } = {};
-const CryptoJS = {};
+import { encryptAES, encryptRSA, decryptAES, decryptRSA } from './keypair';
 
 function dehydrateConsent(item) {
     return _.merge(
