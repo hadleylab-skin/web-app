@@ -1,5 +1,6 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
+import _ from 'lodash';
 import { Container, Header } from 'semantic-ui-react';
 import schema from 'libs/state';
 import { ServiceProvider } from 'components';
@@ -46,6 +47,18 @@ export const LoginRouter = schema(model)(React.createClass({
                             tree={this.props.tree.loginPage}
                             tokenCursor={this.props.tree.token}
                         />
+                    </Container>
+                </BaseLayout>
+            );
+        }
+        const privateKey = this.props.tree.token.data.doctor.data.privateKey.get();
+
+        if (_.isEmpty(privateKey)) {
+            return (
+                <BaseLayout>
+                    <Container text>
+                        <Header as="h1">You don't export your private key yet</Header>
+                        <p>Please follow the instruction to export your private key for the web app.</p>
                     </Container>
                 </BaseLayout>
             );
