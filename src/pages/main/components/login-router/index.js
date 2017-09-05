@@ -36,7 +36,7 @@ export const LoginRouter = schema(model)(React.createClass({
     },
 
     render() {
-        const token = this.props.tree.token.get();
+        const token = this.props.tree.token.get() || {};
         if (token.status !== 'Succeed') {
             return (
                 <BaseLayout>
@@ -55,6 +55,7 @@ export const LoginRouter = schema(model)(React.createClass({
                 token={token.data}
             >
                 <AppRouter
+                    logout={() => this.props.tree.tree.set({})}
                     tree={this.props.tree.app}
                 />
             </ServiceProvider>

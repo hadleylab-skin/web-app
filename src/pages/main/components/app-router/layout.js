@@ -23,6 +23,13 @@ export const InnerLayout = React.createClass({
                                     Doctor info
                                 </Link>
                             </Menu.Item>
+                            <Menu.Item
+                                position="right"
+                            >
+                                <a onClick={this.props.logout} href="#/">
+                                    Logout
+                                </a>
+                            </Menu.Item>
                         </Menu>
                         {this.props.children}
                     </Container>

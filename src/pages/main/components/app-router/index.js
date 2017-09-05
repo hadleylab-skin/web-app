@@ -4,18 +4,21 @@ import {
     HashRouter,
     Route,
 } from 'react-router-dom';
-import { InnerLayout } from './layout';
 import { DoctorPage, PatientListPage } from 'pages';
+import { InnerLayout } from './layout';
 
 
 export const AppRouter = React.createClass({
     propTypes: {
         tree: BaobabPropTypes.cursor.isRequired,
+        logout: React.PropTypes.func.isRequired,
     },
     render() {
         return (
             <HashRouter>
-                <InnerLayout>
+                <InnerLayout
+                    logout={this.props.logout}
+                >
                     <Route
                         exact
                         path="/"
