@@ -20,4 +20,5 @@ function wrapCursor(cursor) {
 
 const tree = new Baobab({});
 const patchedTree = wrapCursor(tree.select());
+window.tree = tree;
 export default patchedTree;

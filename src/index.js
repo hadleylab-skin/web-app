@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Main } from 'pages/main';
+import { MainPage } from 'pages';
 import 'semantic-ui-css/semantic.css';
 
 ReactDOM.render(
-    <Main />,
+    <MainPage />,
     document.getElementById('root')
 );

@@ -96,8 +96,7 @@ export function getPatientService({ token }) {
 
     return (patientPk, cursor) => {
         const service = buildGetService(`/api/v1/patient/${patientPk}/`,
-            // dehydratePatientData,
-            _.identity,
+            dehydratePatientData,
             _.merge({}, defaultHeaders, headers));
 
         return service(cursor);
