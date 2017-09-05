@@ -1,7 +1,7 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import {
-    BrowserRouter,
+    HashRouter,
     Route,
 } from 'react-router-dom';
 import { InnerLayout } from './layout';
@@ -14,9 +14,7 @@ export const AppRouter = React.createClass({
     },
     render() {
         return (
-            <BrowserRouter
-                basename="/_dist/index.html"
-            >
+            <HashRouter>
                 <InnerLayout>
                     <Route
                         exact
@@ -32,7 +30,7 @@ export const AppRouter = React.createClass({
                         component={DoctorPage}
                     />
                 </InnerLayout>
-            </BrowserRouter>
+            </HashRouter>
         );
     },
 });
