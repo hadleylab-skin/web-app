@@ -2,6 +2,7 @@ import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import { Table, Grid, Header, Image, Input } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import schema from '../../libs/state';
 
 const model = (props, context) => ({
@@ -110,14 +111,22 @@ const PatientList = schema(model)(React.createClass({
                                    })
                                    .map((patient) => (
                                        <Table.Row key={patient.data.pk}>
-                                           <Table.Cell>{patient.data.mrn}</Table.Cell>
-                                           <Table.Cell>{patient.data.firstName}</Table.Cell>
-                                           <Table.Cell>{patient.data.lastName}</Table.Cell>
-                                           <Table.Cell>{patient.data.dateOfBirth}</Table.Cell>
-                                           <Table.Cell>{this.renderSex(patient.data.sex)}</Table.Cell>
-                                           <Table.Cell>{this.renderRace(patient.data.race)}</Table.Cell>
-                                           <Table.Cell>{patient.data.molesImagesCount}</Table.Cell>
-                                           <Table.Cell>{this.renderPhoto(patient.data.validConsent.signature)}</Table.Cell>
+                                           {_.map([
+                                               patient.data.mrn,
+                                               patient.data.firstName,
+                                               patient.data.lastName,
+                                               patient.data.dateOfBirth,
+                                               this.renderSex(patient.data.sex),
+                                               this.renderRace(patient.data.race),
+                                               patient.data.molesImagesCount,
+                                               this.renderPhoto(patient.data.validConsent.signature)],
+                                           (data, index) => (
+                                               <Table.Cell key={`${patient.data.pk}-${index}`}>
+                                                   <Link to={`/patient/${patient.data.pk}`}>
+                                                       {data}
+                                                   </Link>
+                                               </Table.Cell>))
+                                           }
                                        </Table.Row>
                                    ))
                                    .value()

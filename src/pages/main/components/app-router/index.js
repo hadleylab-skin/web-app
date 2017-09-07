@@ -4,7 +4,7 @@ import {
     HashRouter,
     Route,
 } from 'react-router-dom';
-import { DoctorPage, PatientListPage } from 'pages';
+import { DoctorPage, PatientListPage, PatientPage } from 'pages';
 import { InnerLayout } from './layout';
 
 
@@ -27,6 +27,18 @@ export const AppRouter = React.createClass({
                                 tree={this.props.tree.patientsPage}
                                 {...props}
                             />)}
+                    />
+                    <Route
+                        path="/patient/:id"
+                        render={(props) => {
+                            const id = props.match.params.id;
+                            const patientCursor = this.props.tree.patientsPage.patients.data.select(id);
+                            return (
+                                <PatientPage
+                                    patientCursor={patientCursor}
+                                />
+                            );
+                        }}
                     />
                     <Route
                         path="/doctor-info"
