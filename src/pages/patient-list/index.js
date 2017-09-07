@@ -1,12 +1,13 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
-import { Table, Grid, Header, Image } from 'semantic-ui-react';
+import { Table, Grid, Header, Image, Input } from 'semantic-ui-react';
 import schema from '../../libs/state';
 
 const model = (props, context) => ({
     tree: {
         patients: context.services.patientsService,
+        search: '',
     },
 });
 
@@ -63,10 +64,23 @@ const PatientList = schema(model)(React.createClass({
 
         return (
             <Grid>
+                <Grid.Row />
                 <Grid.Row>
                     <Grid.Column width={1} />
                     <Grid.Column width={15}>
                         <Header>Patients List</Header>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width={1} />
+                    <Grid.Column width={4}>
+                        <Input
+                            fluid
+                            icon="search"
+                            placeholder="Search..."
+                            value={this.props.tree.search.get()}
+                            onChange={(e) => this.props.tree.search.set(e.target.value)}
+                        />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
@@ -86,18 +100,28 @@ const PatientList = schema(model)(React.createClass({
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                {_.map(patients.data, (patient) => (
-                                    <Table.Row key={patient.data.pk}>
-                                        <Table.Cell>{patient.data.mrn}</Table.Cell>
-                                        <Table.Cell>{patient.data.firstName}</Table.Cell>
-                                        <Table.Cell>{patient.data.lastName}</Table.Cell>
-                                        <Table.Cell>{patient.data.dateOfBirth}</Table.Cell>
-                                        <Table.Cell>{this.renderSex(patient.data.sex)}</Table.Cell>
-                                        <Table.Cell>{this.renderRace(patient.data.race)}</Table.Cell>
-                                        <Table.Cell>{patient.data.molesImagesCount}</Table.Cell>
-                                        <Table.Cell>{this.renderPhoto(patient.data.validConsent.signature)}</Table.Cell>
-                                    </Table.Row>
-                                ))}
+                                { _.chain(patients.data)
+                                   .filter((patient) => {
+                                       const search = _.toLower(this.props.tree.search.get());
+                                       return _.isEmpty(search) ||
+                                           _.includes(_.toLower(patient.data.mrn), search) ||
+                                           _.includes(_.toLower(patient.data.firstName), search) ||
+                                           _.includes(_.toLower(patient.data.lastName), search);
+                                   })
+                                   .map((patient) => (
+                                       <Table.Row key={patient.data.pk}>
+                                           <Table.Cell>{patient.data.mrn}</Table.Cell>
+                                           <Table.Cell>{patient.data.firstName}</Table.Cell>
+                                           <Table.Cell>{patient.data.lastName}</Table.Cell>
+                                           <Table.Cell>{patient.data.dateOfBirth}</Table.Cell>
+                                           <Table.Cell>{this.renderSex(patient.data.sex)}</Table.Cell>
+                                           <Table.Cell>{this.renderRace(patient.data.race)}</Table.Cell>
+                                           <Table.Cell>{patient.data.molesImagesCount}</Table.Cell>
+                                           <Table.Cell>{this.renderPhoto(patient.data.validConsent.signature)}</Table.Cell>
+                                       </Table.Row>
+                                   ))
+                                   .value()
+                                }
                             </Table.Body>
                         </Table>
                     </Grid.Column>
