@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Container, Header } from 'semantic-ui-react';
 import schema from 'libs/state';
 import { ServiceProvider } from 'components';
+import { getRacesList } from 'services/constants';
 import { BaseLayout } from './layout';
 import { LoginForm } from './login-form';
 
@@ -14,6 +15,7 @@ const model = {
         token: { status: 'NotAsked' },
         loginPage: {},
         app: {},
+        raceList: getRacesList(),
     },
 };
 
@@ -26,14 +28,21 @@ export const LoginRouter = schema(model)(React.createClass({
         cursors: React.PropTypes.shape({
             doctor: BaobabPropTypes.cursor.isRequired,
         }),
+        mapRace: React.PropTypes.func.isRequired,
     },
 
     getChildContext() {
+        const races = this.props.tree.raceList.get('data') || {};
         return {
             cursors: {
                 doctor: this.props.tree.token.data.doctor,
             },
+            mapRace: (race) => _.get(races, race, race),
         };
+    },
+
+    logout() {
+        this.props.tree.tree.set({});
     },
 
     render() {
@@ -68,7 +77,7 @@ export const LoginRouter = schema(model)(React.createClass({
                 token={token.data}
             >
                 <AppRouter
-                    logout={() => this.props.tree.tree.set({})}
+                    logout={this.logout}
                     tree={this.props.tree.app}
                 />
             </ServiceProvider>

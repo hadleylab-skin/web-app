@@ -39,6 +39,7 @@ module.exports = _.merge(webpackConfig, {
         new HtmlWebpackPlugin({
             template: 'template.html',
         }),
+        new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.LoaderOptionsPlugin({
