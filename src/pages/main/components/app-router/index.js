@@ -5,15 +5,31 @@ import {
     Route,
 } from 'react-router-dom';
 import { DoctorPage, PatientListPage, PatientPage } from 'pages';
+import schema from 'libs/state';
 import { InnerLayout } from './layout';
 
+const model = (props, context) => ({
+    tree: {
+        patients: context.services.patientsService,
+        patientScreen: {},
+        patientsService: {},
+    },
+});
 
-export const AppRouter = React.createClass({
+export const AppRouter = schema(model)(React.createClass({
     propTypes: {
         tree: BaobabPropTypes.cursor.isRequired,
         logout: React.PropTypes.func.isRequired,
     },
+
+    contextTypes: {
+        services: React.PropTypes.shape({
+            patientsService: React.PropTypes.func.isRequired,
+        }),
+    },
+
     render() {
+        const patientsCursor = this.props.tree.patients;
         return (
             <HashRouter>
                 <InnerLayout
@@ -25,6 +41,7 @@ export const AppRouter = React.createClass({
                         render={(props) => (
                             <PatientListPage
                                 tree={this.props.tree.patientsPage}
+                                patientsCursor={patientsCursor}
                                 {...props}
                             />)}
                     />
@@ -32,7 +49,7 @@ export const AppRouter = React.createClass({
                         path="/patient/:id"
                         render={(props) => {
                             const id = props.match.params.id;
-                            const patientCursor = this.props.tree.patientsPage.patients.data.select(id);
+                            const patientCursor = patientsCursor.data.select(id);
                             return (
                                 <PatientPage
                                     patientCursor={patientCursor}
@@ -48,5 +65,5 @@ export const AppRouter = React.createClass({
             </HashRouter>
         );
     },
-});
+}));
 

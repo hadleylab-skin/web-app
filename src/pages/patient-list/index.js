@@ -3,14 +3,13 @@ import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import { Table, Grid, Header, Image, Input } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import schema from '../../libs/state';
+import schema from 'libs/state';
 
-const model = (props, context) => ({
+const model = {
     tree: {
-        patients: context.services.patientsService,
         search: '',
     },
-});
+};
 
 
 export const PatientListPage = React.createClass({
@@ -23,6 +22,7 @@ export const PatientListPage = React.createClass({
 const PatientList = schema(model)(React.createClass({
     propTypes: {
         tree: BaobabPropTypes.cursor.isRequired,
+        patientsCursor: BaobabPropTypes.cursor.isRequired,
     },
 
     contextTypes: {
@@ -54,7 +54,7 @@ const PatientList = schema(model)(React.createClass({
     },
 
     render() {
-        const patients = this.props.tree.patients.get();
+        const patients = this.props.patientsCursor.get();
         if (patients.status !== 'Succeed') {
             return (
                 <div>
