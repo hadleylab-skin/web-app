@@ -29,6 +29,7 @@ export const LoginRouter = schema(model)(React.createClass({
             doctor: BaobabPropTypes.cursor.isRequired,
         }),
         mapRace: React.PropTypes.func.isRequired,
+        races: React.PropTypes.object.isRequired,
     },
 
     getChildContext() {
@@ -38,6 +39,7 @@ export const LoginRouter = schema(model)(React.createClass({
                 doctor: this.props.tree.token.data.doctor,
             },
             mapRace: (race) => _.get(races, race, race),
+            races,
         };
     },
 

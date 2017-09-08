@@ -17,9 +17,9 @@ function dehydrateConsent(item) {
 
 const needEncryption = ['firstName', 'lastName', 'mrn', 'dateOfBirth'];
 
-async function dehydratePatientData(data) {
+function dehydratePatientData(data) {
     let dehydratedData = { ...dehydrateConsent(data) };
-    const aesKey = await decryptRSA(dehydratedData.encryptedKey);
+    const aesKey = decryptRSA(dehydratedData.encryptedKey);
     _.forEach(_.pickBy(dehydratedData), (value, key) => {
         if (_.includes(needEncryption, key) && value !== '') {
             dehydratedData[key] = decryptAES(value, aesKey);
@@ -32,10 +32,10 @@ function convertListToDict(list) {
     return _.keyBy(list, (patient) => patient.data.pk);
 }
 
-async function dehydratePatients(patients) {
-    const data = await Promise.all(_.map(
+function dehydratePatients(patients) {
+    const data = _.map(
         patients,
-        dehydratePatientData));
+        dehydratePatientData);
 
     return convertListToDict(wrapItemsAsRemoteData(data));
 }
@@ -52,40 +52,35 @@ function hydratePatientData(remoteDoctor) {
     if (typeof doctor === 'undefined') {
         throw { message: 'System error, context is not loaded' };
     }
-    return async (patientData) => {
-        let data = new FormData();
+    return (patientData) => {
+        let data = {};
         const aesKey = Math.random().toString(36).substring(2);
         let encryptionKeys = {};
-        encryptionKeys[`${doctor.pk}`] = await encryptRSA(aesKey);
+        encryptionKeys[`${doctor.pk}`] = encryptRSA(aesKey);
 
         if (doctor.myCoordinatorId) {
-            encryptionKeys[`${doctor.myCoordinatorId}`] = await encryptRSA(aesKey, doctor.coordinatorPublicKey);
+            encryptionKeys[`${doctor.myCoordinatorId}`] = encryptRSA(aesKey, doctor.coordinatorPublicKey);
         }
 
-        data.append('encryptionKeys', JSON.stringify(encryptionKeys));
+        data.encryptionKeys = JSON.stringify(encryptionKeys);
 
         _.forEach(_.pickBy(patientData), (value, key) => {
-            if (value === '' || (key === 'photo' && _.isEmpty(patientData.photo))) {
+            if (value === '') {
                 // skip empty data
                 return;
             }
 
-            if (key === 'photo') {
-                data.append('photo', hydrateImage(value.thumbnail));
-                return;
-            }
-
             if (_.includes(needEncryption, key)) {
-                data.append(key, encryptAES(value, aesKey));
+                data[key] = encryptAES(value, aesKey);
             } else {
-                data.append(key, value);
+                data[key] = value;
             }
 
             if (key === 'mrn') {
-                data.append('mrnHash', CryptoJS.MD5(value).toString());
+                data.mrnHash = CryptoJS.MD5(value).toString();
             }
         });
-        return data;
+        return JSON.stringify(data);
     };
 }
 
@@ -121,7 +116,8 @@ export function createPatientService({ token, doctor }) {
 
 export function updatePatientService({ token, doctor }) {
     const headers = {
-        'Content-Type': 'multipart/form-data',
+        // 'Content-Type': 'multipart/form-data',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
     };
@@ -136,7 +132,7 @@ export function updatePatientService({ token, doctor }) {
     };
 }
 
-function hydrateConsentData(base64IMage){
+function hydrateConsentData(base64IMage) {
     let data = new FormData();
     data.append('signature', base64IMage);
     return data;
@@ -144,7 +140,7 @@ function hydrateConsentData(base64IMage){
 
 export function updatePatientConsentService({ token }) {
     const headers = {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data', 
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
     };

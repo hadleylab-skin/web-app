@@ -18,8 +18,10 @@ function getPublicKey() {
 
 export function encryptRSA(data, publicKey = undefined) {
     let _publicKey = publicKey || getPublicKey();
+    const privateKey = getPrivateKey();
     const encryptor = new JSEncrypt.JSEncrypt();
     encryptor.setPublicKey(_publicKey);
+    encryptor.setPrivateKey(privateKey);
     return encryptor.encrypt(data);
 }
 

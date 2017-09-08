@@ -29,7 +29,7 @@ export function buildGetService(path,
             let response = await fetch(`${url}${path}`,
                                        { headers }).then(checkStatus);
             const data = await response.json();
-            const dehydratedData = await dehydrate(data);
+            const dehydratedData = dehydrate(data);
             result = {
                 data: dehydratedData,
                 status: 'Succeed',
@@ -55,7 +55,7 @@ export function buildPostService(path,
         cursor.set('status', 'Loading');
         let result = {};
 
-        const body = await hydrate(data);
+        const body = hydrate(data);
         const payload = {
             body,
             method,
@@ -65,7 +65,7 @@ export function buildPostService(path,
         try {
             let response = await fetch(`${url}${path}`, payload).then(checkStatus);
             let respData = await response.json();
-            const dehydratedData = await dehydrate(respData);
+            const dehydratedData = dehydrate(respData);
             result = {
                 status: 'Succeed',
                 data: dehydratedData,
