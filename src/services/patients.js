@@ -116,8 +116,6 @@ export function createPatientService({ token, doctor }) {
 
 export function updatePatientService({ token, doctor }) {
     const headers = {
-        // 'Content-Type': 'multipart/form-data',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
     };

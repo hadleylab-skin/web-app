@@ -1,9 +1,9 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
-import { Table, Grid, Header, Image, Input } from 'semantic-ui-react';
+import { Table, Grid, Header, Image, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { GridWrapper } from 'components';
+import { GridWrapper, Input } from 'components';
 import schema from 'libs/state';
 
 const model = {
@@ -33,6 +33,13 @@ const PatientList = schema(model)(React.createClass({
         mapRace: React.PropTypes.func.isRequired,
     },
 
+    formatMrn(mrn) {
+        if (_.isEmpty(mrn)) {
+            return null;
+        }
+        return `(${mrn})`;
+    },
+
     renderPhoto(photo) {
         if (_.isEmpty(photo)) {
             return null;
@@ -60,13 +67,11 @@ const PatientList = schema(model)(React.createClass({
             <Table celled>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>MRN</Table.HeaderCell>
-                        <Table.HeaderCell>First Name</Table.HeaderCell>
-                        <Table.HeaderCell>Last Name</Table.HeaderCell>
+                        <Table.HeaderCell>Patient</Table.HeaderCell>
                         <Table.HeaderCell>Date of birth</Table.HeaderCell>
                         <Table.HeaderCell>Sex</Table.HeaderCell>
                         <Table.HeaderCell>Race</Table.HeaderCell>
-                        <Table.HeaderCell>Images</Table.HeaderCell>
+                        <Table.HeaderCell>Mole images</Table.HeaderCell>
                         <Table.HeaderCell>Consent</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -82,19 +87,33 @@ const PatientList = schema(model)(React.createClass({
                         .map((patient) => (
                             <Table.Row key={patient.data.pk}>
                                 {_.map([
-                                    patient.data.mrn,
-                                    patient.data.firstName,
-                                    patient.data.lastName,
+                                    (
+                                        <Link to={`/patient/${patient.data.pk}`}>
+                                            {patient.data.firstName} {patient.data.lastName} {this.formatMrn(patient.data.mrn)}
+                                        </Link>
+                                    ),
                                     patient.data.dateOfBirth,
                                     this.renderSex(patient.data.sex),
                                     this.renderRace(patient.data.race),
-                                    patient.data.molesImagesCount,
+                                    (
+                                        <Link to={`/patient/${patient.data.pk}/moles`}>
+                                            {
+                                                patient.data.moleImagesWithDiagnoseRequired
+                                                ?
+                                                (
+                                                    <Label color="red" basic>
+                                                        Diagnose Required for {patient.data.moleImagesWithDiagnoseRequired}/{patient.data.molesImagesCount}
+                                                    </Label>
+                                                )
+                                                :
+                                                patient.data.molesImagesCount
+                                            }
+                                        </Link>
+                                    ),
                                     this.renderPhoto(patient.data.validConsent.signature)],
                                 (data, index) => (
                                     <Table.Cell key={`${patient.data.pk}-${index}`}>
-                                        <Link to={`/patient/${patient.data.pk}`}>
-                                            {data}
-                                        </Link>
+                                        {data}
                                     </Table.Cell>))
                                 }
                             </Table.Row>
@@ -131,8 +150,7 @@ const PatientList = schema(model)(React.createClass({
                                 fluid
                                 icon="search"
                                 placeholder="Search..."
-                                value={this.props.tree.search.get()}
-                                onChange={(e) => this.props.tree.search.set(e.target.value)}
+                                cursor={this.props.tree.search}
                             />
                         </Grid.Column>
                     </Grid.Row>

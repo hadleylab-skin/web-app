@@ -59,25 +59,6 @@ export function getMolePhotoService({ token }) {
     };
 }
 
-function hydrateUpdateMolePhotoData(imageData) {
-    let data = new FormData();
-    const keys = _.keys(imageData);
-
-    _.map(keys, (key) => {
-        if (typeof imageData[key] !== 'undefined') {
-            if (key === 'biopsyData') {
-                data.append(key, JSON.stringify(imageData[key]));
-
-                return;
-            }
-
-            data.append(key, imageData[key]);
-        }
-    });
-
-    return data;
-}
-
 function dehydrateUpdateMolePhotoData(imageData) {
     let data = imageData;
 
@@ -88,7 +69,6 @@ function dehydrateUpdateMolePhotoData(imageData) {
 
 export function updateMolePhotoService({ token }) {
     const headers = {
-        'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
     };
@@ -97,7 +77,7 @@ export function updateMolePhotoService({ token }) {
         const _service = buildPostService(
             `/api/v1/patient/${patientPk}/mole/${molePk}/image/${imagePk}/`,
             'PATCH',
-            hydrateUpdateMolePhotoData,
+            JSON.stringify,
             dehydrateUpdateMolePhotoData,
             _.merge({}, defaultHeaders, headers));
         return _service(cursor, data);

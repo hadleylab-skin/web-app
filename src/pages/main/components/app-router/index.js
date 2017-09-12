@@ -4,7 +4,12 @@ import {
     HashRouter,
     Route,
 } from 'react-router-dom';
-import { DoctorPage, PatientListPage, PatientPage } from 'pages';
+import { DoctorPage,
+         PatientListPage,
+         PatientPage,
+         PatientMoleListPage,
+         MoleImagesListPage,
+} from 'pages';
 import schema from 'libs/state';
 import { InnerLayout } from './layout';
 
@@ -12,7 +17,9 @@ const model = (props, context) => ({
     tree: {
         patients: context.services.patientsService,
         patientScreen: {},
-        patientsService: {},
+        moleScreen: {},
+        patientsMoles: {},
+        molesImages: {},
     },
 });
 
@@ -25,11 +32,15 @@ export const AppRouter = schema(model)(React.createClass({
     contextTypes: {
         services: React.PropTypes.shape({
             patientsService: React.PropTypes.func.isRequired,
+            getPatientMolesService: React.PropTypes.func.isRequired,
         }),
     },
 
     render() {
         const patientsCursor = this.props.tree.patients;
+        const patientsMolesCursor = this.props.tree.patientsMoles;
+        const molesImagesCursor = this.props.tree.molesImages;
+        const moleScreenCursor = this.props.tree.moleScreen;
         return (
             <HashRouter>
                 <InnerLayout
@@ -46,6 +57,7 @@ export const AppRouter = schema(model)(React.createClass({
                             />)}
                     />
                     <Route
+                        exact
                         path="/patient/:id"
                         render={(props) => {
                             const id = props.match.params.id;
@@ -58,6 +70,46 @@ export const AppRouter = schema(model)(React.createClass({
                         }}
                     />
                     <Route
+                        exact
+                        path="/patient/:id/moles"
+                        render={(props) => {
+                            const id = props.match.params.id;
+                            const patientMolesCursor = patientsMolesCursor.select(id);
+                            return (
+                                <PatientMoleListPage
+                                    id={id}
+                                    patientMolesCursor={patientMolesCursor}
+                                />
+                            );
+                        }}
+                    />
+                    <Route
+                        exact
+                        path="/patient/:patientId/mole/:moleId"
+                        render={(props) => {
+                            const patientId = props.match.params.patientId;
+                            const moleId = props.match.params.moleId;
+                            const moleImagesCursor = molesImagesCursor.select(moleId);
+                            const patientMolesCursor = patientsMolesCursor.select(patientId);
+                            return (
+                                <MoleImagesListPage
+                                    patientId={patientId}
+                                    moleId={moleId}
+                                    moleImagesCursor={moleImagesCursor}
+                                    tree={moleScreenCursor}
+                                    updateParent={async () => {
+                                        await this.context.services.getPatientMolesService(
+                                            patientId,
+                                            patientMolesCursor);
+                                        await this.context.services.patientsService(patientsCursor);
+                                    }}
+                                />
+                            );
+                        }}
+                    />
+
+                    <Route
+                        exact
                         path="/doctor-info"
                         component={DoctorPage}
                     />
