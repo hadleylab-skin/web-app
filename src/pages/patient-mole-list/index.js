@@ -47,8 +47,22 @@ const PatientMoleList = schema(model)(React.createClass({
                         </Label>
                     )
                     :
-                    `See all (${mole.data.imagesCount})`
+                    null
                 }
+                {
+                    mole.data.imagesApproveRequired
+                    ?
+                    (
+                        <Label color="red" basic>
+                            Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount}
+                        </Label>
+                    )
+                    :
+                    null
+                }
+                <Label basic>
+                    Total: {mole.data.imagesCount}
+                </Label>
             </Link>
         );
     },

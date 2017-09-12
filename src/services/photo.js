@@ -10,11 +10,12 @@ function hydrateMolePhotoData(uri) {
 }
 
 function dehydrateMolePhotoData(data) {
-    const { biopsy, biopsyData, clinicalDiagnosis, pathDiagnosis } = data;
-    let newData = _.omit(data, ['biopsy', 'biopsyData', 'clinicalDiagnosis', 'pathDiagnosis']);
+    const { approved, biopsy, biopsyData, clinicalDiagnosis, pathDiagnosis } = data;
+    let newData = _.omit(data, ['biopsy', 'biopsyData', 'clinicalDiagnosis', 'pathDiagnosis', 'approved']);
 
     newData.info = {
         data: {
+            approved,
             biopsy,
             biopsyData: JSON.parse(biopsyData),
             clinicalDiagnosis,

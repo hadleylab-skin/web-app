@@ -30,11 +30,12 @@ function dehydrateMoleData(data) {
     let newData = _.omit(data, ['anatomicalSites']);
 
     const images = _.map(data.images, (image) => {
-        const { biopsy, biopsyData, clinicalDiagnosis, pathDiagnosis } = image;
-        let newImage = _.omit(image, ['biopsy', 'biopsyData', 'clinicalDiagnosis', 'pathDiagnosis']);
+        const { approved, biopsy, biopsyData, clinicalDiagnosis, pathDiagnosis } = image;
+        let newImage = _.omit(image, ['approved', 'biopsy', 'biopsyData', 'clinicalDiagnosis', 'pathDiagnosis']);
 
         newImage.info = {
             data: {
+                approved,
                 biopsy,
                 biopsyData: JSON.parse(biopsyData),
                 clinicalDiagnosis,

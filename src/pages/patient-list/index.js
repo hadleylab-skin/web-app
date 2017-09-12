@@ -105,9 +105,22 @@ const PatientList = schema(model)(React.createClass({
                                                         Diagnose Required for {patient.data.moleImagesWithDiagnoseRequired}/{patient.data.molesImagesCount}
                                                     </Label>
                                                 )
-                                                :
-                                                patient.data.molesImagesCount
+                                                : null
                                             }
+                                            {
+                                                patient.data.moleImagesApproveRequired
+                                                ?
+                                                (
+                                                    <Label color="red" basic>
+                                                        Approve required for {patient.data.moleImagesApproveRequired}/{patient.data.molesImagesCount}
+                                                    </Label>
+                                                )
+                                                :
+                                                null
+                                            }
+                                            <Label basic>
+                                                Total: {patient.data.molesImagesCount}
+                                            </Label>
                                         </Link>
                                     ),
                                     this.renderPhoto(patient.data.validConsent.signature)],

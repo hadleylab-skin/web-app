@@ -2,8 +2,7 @@ import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import { Table, Grid, Header, Image, Button } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import { GridWrapper, Input } from 'components';
+import { GridWrapper, Input, Checkbox } from 'components';
 import schema from 'libs/state';
 
 const model = (props, context) => ({
@@ -49,7 +48,7 @@ const MoleImageList = schema(model)(React.createClass({
         return async () => {
             const cursor = this.props.moleImagesCursor.data.images.select(id).data.info;
             const data = _.pick(cursor.get('data'),
-                                ['pathDiagnosis', 'clinicalDiagnosis']);
+                                ['pathDiagnosis', 'clinicalDiagnosis', 'approved']);
             const service = this.context.services.updateMolePhotoService;
             const result = await service(this.props.patientId, this.props.moleId, id, cursor, data);
             await this.props.updateParent();
@@ -83,7 +82,8 @@ const MoleImageList = schema(model)(React.createClass({
                         <Table.HeaderCell>Image</Table.HeaderCell>
                         <Table.HeaderCell>Path Diagnoses</Table.HeaderCell>
                         <Table.HeaderCell>Clinical Diagnoses</Table.HeaderCell>
-                        <Table.HeaderCell/>
+                        <Table.HeaderCell>Approved</Table.HeaderCell>
+                        <Table.HeaderCell />
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -101,6 +101,11 @@ const MoleImageList = schema(model)(React.createClass({
                             <Table.Cell>
                                 <Input
                                     cursor={cursor.select(id).data.info.data.clinicalDiagnosis}
+                                />
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Checkbox
+                                    cursor={cursor.select(id).data.info.data.approved}
                                 />
                             </Table.Cell>
                             <Table.Cell>
