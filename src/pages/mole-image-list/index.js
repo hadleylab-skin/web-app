@@ -28,6 +28,9 @@ const MoleImageList = schema(model)(React.createClass({
     },
 
     contextTypes: {
+        cursors: React.PropTypes.shape({
+            doctor: BaobabPropTypes.cursor.isRequired,
+        }),
         services: React.PropTypes.shape({
             getMoleService: React.PropTypes.func.isRequired,
             updateMolePhotoService: React.PropTypes.func.isRequired,
@@ -74,6 +77,7 @@ const MoleImageList = schema(model)(React.createClass({
 
     renderTable(mole) {
         const cursor = this.props.moleImagesCursor.data.images;
+        const { isCoordinator } = this.context.cursors.doctor.data.get();
         return (
             <Table celled>
                 <Table.Header>
@@ -105,6 +109,7 @@ const MoleImageList = schema(model)(React.createClass({
                             </Table.Cell>
                             <Table.Cell>
                                 <Checkbox
+                                    disabled={!isCoordinator}
                                     cursor={cursor.select(id).data.info.data.approved}
                                 />
                             </Table.Cell>
