@@ -12,16 +12,9 @@ function getPrivateKey() {
     return decryptAES(encryptedPrivateKey, password);
 }
 
-function getPublicKey() {
-    return tree.get('token', 'data', 'doctor', 'data', 'publicKey');
-}
-
-export function encryptRSA(data, publicKey = undefined) {
-    let _publicKey = publicKey || getPublicKey();
-    const privateKey = getPrivateKey();
+export function encryptRSA(data, publicKey) {
     const encryptor = new JSEncrypt.JSEncrypt();
-    encryptor.setPublicKey(_publicKey);
-    encryptor.setPrivateKey(privateKey);
+    encryptor.setKey(publicKey);
     return encryptor.encrypt(data);
 }
 

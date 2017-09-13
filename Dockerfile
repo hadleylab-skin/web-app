@@ -1,4 +1,5 @@
 FROM node:8-alpine
+RUN apk add --no-cache git
 ADD package.json /package.json
 ADD yarn.lock /yarn.lock
 RUN yarn

@@ -31,7 +31,7 @@ const Patient = schema({})(React.createClass({
             pk,
             this.props.patientCursor,
             _.pick(this.props.patientCursor.data.get(),
-                   ['mrn', 'firstName', 'lastName', 'sex', 'dateOfBirth', 'race'])
+                   ['mrn', 'firstName', 'lastName', 'sex', 'dateOfBirth', 'race', 'doctors'])
         );
         console.log(result);
     },

@@ -52,15 +52,23 @@ function hydratePatientData(remoteDoctor) {
     if (typeof doctor === 'undefined') {
         throw { message: 'System error, context is not loaded' };
     }
-    return (patientData) => {
+    return ({ doctors, ...patientData }) => {
         let data = {};
         const aesKey = Math.random().toString(36).substring(2);
         let encryptionKeys = {};
-        encryptionKeys[`${doctor.pk}`] = encryptRSA(aesKey);
+        encryptionKeys[`${doctor.pk}`] = encryptRSA(aesKey, doctor.publicKey);
 
         if (doctor.myCoordinatorId) {
             encryptionKeys[`${doctor.myCoordinatorId}`] = encryptRSA(aesKey, doctor.coordinatorPublicKey);
         }
+
+        _.each(doctors, (doctorId) => {
+            if (!encryptionKeys[`${doctorId}`]) {
+                encryptionKeys[`${doctorId}`] = encryptRSA(
+                    aesKey,
+                    doctor.myDoctorsPublicKeys[`${doctorId}`]);
+            }
+        });
 
         data.encryptionKeys = JSON.stringify(encryptionKeys);
 
