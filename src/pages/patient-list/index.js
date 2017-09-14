@@ -3,7 +3,7 @@ import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import { Table, Grid, Header, Image, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { GridWrapper, Input } from 'components';
+import { GridWrapper, Input, Consent, PatientMolesInfo } from 'components';
 import schema from 'libs/state';
 
 const model = {
@@ -87,43 +87,14 @@ const PatientList = schema(model)(React.createClass({
                         .map((patient) => (
                             <Table.Row key={patient.data.pk}>
                                 {_.map([
-                                    (
-                                        <Link to={`/patient/${patient.data.pk}`}>
-                                            {patient.data.firstName} {patient.data.lastName} {this.formatMrn(patient.data.mrn)}
-                                        </Link>
-                                    ),
+                                    (<Link to={`/patient/${patient.data.pk}`}>
+                                        {patient.data.firstName} {patient.data.lastName} {this.formatMrn(patient.data.mrn)}
+                                    </Link>),
                                     patient.data.dateOfBirth,
                                     this.renderSex(patient.data.sex),
                                     this.renderRace(patient.data.race),
-                                    (
-                                        <Link to={`/patient/${patient.data.pk}/moles`}>
-                                            {
-                                                patient.data.moleImagesWithDiagnoseRequired
-                                                ?
-                                                (
-                                                    <Label color="red" basic>
-                                                        Diagnose Required for {patient.data.moleImagesWithDiagnoseRequired}/{patient.data.molesImagesCount}
-                                                    </Label>
-                                                )
-                                                : null
-                                            }
-                                            {
-                                                patient.data.moleImagesApproveRequired
-                                                ?
-                                                (
-                                                    <Label color="red" basic>
-                                                        Approve required for {patient.data.moleImagesApproveRequired}/{patient.data.molesImagesCount}
-                                                    </Label>
-                                                )
-                                                :
-                                                null
-                                            }
-                                            <Label basic>
-                                                Total: {patient.data.molesImagesCount}
-                                            </Label>
-                                        </Link>
-                                    ),
-                                    this.renderPhoto(patient.data.validConsent.signature)],
+                                    (<PatientMolesInfo patient={patient.data} />),
+                                    (<Consent noPhoto consent={patient.data.validConsent} />)],
                                 (data, index) => (
                                     <Table.Cell key={`${patient.data.pk}-${index}`}>
                                         {data}

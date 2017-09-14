@@ -3,13 +3,13 @@ import CryptoJS from 'crypto-js';
 import { buildGetService, buildPostService, defaultHeaders, wrapItemsAsRemoteData, hydrateImage } from './base';
 import { encryptAES, encryptRSA, decryptAES, decryptRSA } from './keypair';
 
-function dehydrateConsent(item) {
+function dehydrateConsent({ validConsent, ...item }) {
     return _.merge(
         item,
         {
             validConsent: {
                 status: 'Succeed',
-                data: item.validConsent,
+                data: validConsent,
             },
         }
     );
