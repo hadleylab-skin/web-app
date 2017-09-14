@@ -7,7 +7,7 @@ export function PatientMolesInfo({ patient }) {
     if (patient.molesCount === 0) {
         return (
             <Label basic>
-                Patient have no Moles
+                Patient has no moles
             </Label>
         );
     }
@@ -18,7 +18,7 @@ export function PatientMolesInfo({ patient }) {
                 ?
                 (
                     <div><Label color="red" basic>
-                        Diagnose Required for {patient.moleImagesWithDiagnoseRequired}/{patient.molesImagesCount}
+                        Diagnose Required for {patient.moleImagesWithDiagnoseRequired}/{patient.molesImagesCount} images
                     </Label><br /></div>
                 )
                 : null
@@ -28,14 +28,14 @@ export function PatientMolesInfo({ patient }) {
                 ?
                 (
                     <div><Label color="red" basic>
-                        Approve required for {patient.moleImagesApproveRequired}/{patient.molesImagesCount}
+                        Approve required for {patient.moleImagesApproveRequired}/{patient.molesImagesCount} images
                     </Label><br /></div>
                 )
                 :
                 null
             }
             <Label basic>
-                Total: {patient.molesImagesCount}
+                Total: {patient.molesCount} moles
             </Label>
         </Link>);
 }

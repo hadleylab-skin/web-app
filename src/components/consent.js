@@ -11,7 +11,7 @@ export function Consent({ consent, noPhoto }) {
     if (consent.data) {
         return (
             <div>
-                <p>Consent valid till {moment(consent.data.dateExpired).format('DD/MMM/YYYY')}</p>
+                <p>Consent valid till {moment(consent.data.dateExpired).format('MMM d, YYYY')}</p>
                 { noPhoto ? null : <Image src={consent.data.signature} size="large" /> }
             </div>
         );

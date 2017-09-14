@@ -1,7 +1,7 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
-import { Table, Grid, Header, Image, Label, } from 'semantic-ui-react';
+import { Table, Grid, Header, Image, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { GridWrapper } from 'components';
 import schema from 'libs/state';
@@ -37,32 +37,41 @@ const PatientMoleList = schema(model)(React.createClass({
         }
         return (
             <Link to={`/patient/${this.props.id}/mole/${mole.data.pk}`}>
-                <Image src={photo} size="tiny" />
-                {
-                    mole.data.imagesWithDiagnoseRequired
-                    ?
-                    (
-                        <Label color="red" basic>
-                            Diagnose Required for {mole.data.imagesWithDiagnoseRequired}/{mole.data.imagesCount}
-                        </Label>
-                    )
-                    :
-                    null
-                }
-                {
-                    mole.data.imagesApproveRequired
-                    ?
-                    (
-                        <Label color="red" basic>
-                            Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount}
-                        </Label>
-                    )
-                    :
-                    null
-                }
-                <Label basic>
-                    Total: {mole.data.imagesCount}
-                </Label>
+
+                <Grid>
+                    <Grid.Row>
+                        <Grid.Column width={6}>
+                            <Image src={photo} size="tiny" />
+                        </Grid.Column>
+                        <Grid.Column width={10}>
+                            {
+                                mole.data.imagesWithDiagnoseRequired
+                                ?
+                                (
+                                    <div><Label color="red" basic>
+                                        Diagnose Required for {mole.data.imagesWithDiagnoseRequired}/{mole.data.imagesCount} images
+                                    </Label><br /></div>
+                                )
+                                :
+                                null
+                            }
+                            {
+                                mole.data.imagesApproveRequired
+                                ?
+                                (
+                                    <div><Label color="red" basic>
+                                        Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount} images
+                                    </Label><br /></div>
+                                )
+                                :
+                                null
+                            }
+                            <Label basic>
+                                Total: {mole.data.imagesCount} images
+                            </Label>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
             </Link>
         );
     },
