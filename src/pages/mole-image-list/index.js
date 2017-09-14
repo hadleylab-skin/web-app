@@ -83,6 +83,7 @@ const MoleImageList = schema(model)(React.createClass({
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Created</Table.HeaderCell>
+                        <Table.HeaderCell>Age</Table.HeaderCell>
                         <Table.HeaderCell>Image</Table.HeaderCell>
                         <Table.HeaderCell>Path Diagnoses</Table.HeaderCell>
                         <Table.HeaderCell>Clinical Diagnoses</Table.HeaderCell>
@@ -96,6 +97,7 @@ const MoleImageList = schema(model)(React.createClass({
                             key={id}
                         >
                             <Table.Cell>{image.data.dateCreated}</Table.Cell>
+                            <Table.Cell>{image.data.age}</Table.Cell>
                             <Table.Cell>{this.renderPhoto(image.data.photo.thumbnail)}</Table.Cell>
                             <Table.Cell>
                                 <Input
