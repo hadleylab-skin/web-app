@@ -2,7 +2,8 @@ import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import schema from 'libs/state';
-import { Button, Form, Input, Icon, Message, List } from 'semantic-ui-react';
+import { Button, Form, Input, Icon } from 'semantic-ui-react';
+import { FormErrorMessages, prepareErrorTexts } from 'components';
 import { loginService } from 'services/login';
 
 const model = {
@@ -40,15 +41,7 @@ export const LoginForm = schema(model)(React.createClass({
         const passwordCursor = this.props.tree.password;
         const token = this.props.tokenCursor.get();
         const errors = _.get(token, 'error.data', {});
-        const errorTexts = _.flatten(_.map(errors, (fieldErrors, field) =>
-            _.map(fieldErrors, (error, index) => (
-                <List.Item
-                    key={`${field}-${index}`}
-                >
-                    <b>{titleMap(field)}</b> {error}
-                </List.Item>
-            ))
-        ));
+        const errorTexts = prepareErrorTexts(errors, titleMap);
         return (
             <Form
                 onSubmit={this.submit}
@@ -88,24 +81,7 @@ export const LoginForm = schema(model)(React.createClass({
                 >
                     Submit
                 </Button>
-                {
-                    errorTexts.length > 0
-                    ?
-                    (
-                        <Message
-                            negative
-                        >
-                            <Message.Header>
-                                Please fix form errors
-                            </Message.Header>
-                            <List>
-                                {errorTexts}
-                            </List>
-                        </Message>
-                    )
-                    :
-                    null
-                }
+                <FormErrorMessages errorTexts={errorTexts} />
             </Form>
         );
     },

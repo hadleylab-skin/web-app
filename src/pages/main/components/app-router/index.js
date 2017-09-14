@@ -41,6 +41,7 @@ export const AppRouter = schema(model)(React.createClass({
         const patientsMolesCursor = this.props.tree.patientsMoles;
         const molesImagesCursor = this.props.tree.molesImages;
         const moleScreenCursor = this.props.tree.moleScreen;
+        const patientScreenCursor = this.props.tree.patientScreenCursor;
         return (
             <HashRouter>
                 <InnerLayout
@@ -64,6 +65,7 @@ export const AppRouter = schema(model)(React.createClass({
                             const patientCursor = patientsCursor.data.select(id);
                             return (
                                 <PatientPage
+                                    tree={patientScreenCursor}
                                     patientCursor={patientCursor}
                                 />
                             );

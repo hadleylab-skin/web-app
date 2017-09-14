@@ -1,10 +1,57 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
-import { GridWrapper, Input, DatePicker, Select } from 'components';
-import { Grid, Header, Image, Form, Button } from 'semantic-ui-react';
+import tv4 from 'tv4';
+import { GridWrapper, Input,
+         DatePicker, Select,
+         FormErrorMessages, prepareErrorTexts,
+} from 'components';
+import { Grid, Header, Image, Form, Button, Message } from 'semantic-ui-react';
 
 import schema from '../../libs/state';
+
+
+function titleMap(title) {
+    switch (title) {
+    case 'mrnHash':
+        return 'MRN:';
+    case 'nonFieldErrors':
+        return '';
+    default:
+        return `${_.capitalize(title)}:`;
+    }
+}
+
+function errorsMap(errors) {
+    return _.chain(errors)
+            .map((error) => [error.dataPath.slice(1), [error.message]])
+            .fromPairs()
+            .value();
+}
+
+tv4.setErrorReporter((error, data, itemSchema) => itemSchema.message);
+
+const patientValidationSchema = {
+    type: 'object',
+    properties: {
+        firstName: {
+            minLength: 2,
+            message: 'too short',
+        },
+        lastName: {
+            minLength: 2,
+            message: 'too short',
+        },
+        mrn: {
+            type: 'string',
+            pattern: '^\\d+$',
+            message: 'MRN should be an integer number, less than 10 digits',
+            maxLength: 10,
+        },
+    },
+    required: ['firstName', 'lastName'],
+    message: 'required',
+};
 
 export const PatientPage = React.createClass({
     // We need this wrapper to make hot module replacement work
@@ -15,6 +62,7 @@ export const PatientPage = React.createClass({
 
 const Patient = schema({})(React.createClass({
     propTypes: {
+        tree: BaobabPropTypes.cursor.isRequired,
         patientCursor: BaobabPropTypes.cursor.isRequired,
     },
 
@@ -25,15 +73,42 @@ const Patient = schema({})(React.createClass({
         }),
     },
 
+    componentWillMount() {
+        const patientCursor = this.props.patientCursor;
+        if (_.isEmpty(patientCursor.get())) {
+            patientCursor.on('update', this.setupAndUnsubscribe);
+        } else {
+            this.props.tree.set(patientCursor.get());
+        }
+    },
+
+    setupAndUnsubscribe(e) {
+        if (e.data.currentData.status === 'Succeed') {
+            this.props.tree.set(e.data.currentData);
+            this.props.patientCursor.off(this.setupAndUnsubscribe);
+        }
+    },
+
     async submit() {
-        const pk = this.props.patientCursor.data.get('pk');
+        const data = _.pick(
+            this.props.tree.data.get(),
+            ['mrn', 'firstName', 'lastName', 'sex', 'dateOfBirth', 'race', 'doctors']);
+        const validationResult = tv4.validateMultiple(data, patientValidationSchema);
+        if (validationResult.errors.length) {
+            this.props.tree.error.data.set(errorsMap(validationResult.errors));
+            return;
+        }
+        const pk = this.props.tree.data.get('pk');
         let result = await this.context.services.updatePatientService(
             pk,
-            this.props.patientCursor,
-            _.pick(this.props.patientCursor.data.get(),
-                   ['mrn', 'firstName', 'lastName', 'sex', 'dateOfBirth', 'race', 'doctors'])
-        );
-        console.log(result);
+            this.props.tree,
+            data
+          );
+        if (result.status === 'Succeed') {
+            this.props.patientCursor.set(this.props.tree.get());
+            this.props.tree.saved.set(true);
+            setTimeout(() => this.props.tree.saved.set(false), 2000);
+        }
     },
 
     renderPhoto(photo) {
@@ -46,7 +121,14 @@ const Patient = schema({})(React.createClass({
     },
 
     render() {
-        const patientCursor = this.props.patientCursor.data;
+        const patientCursor = this.props.tree.data;
+        const status = this.props.patientCursor.status.get();
+        const disabled = !status;
+        const loading = status === 'Loading';
+        const saved = this.props.tree.saved.get();
+        const errors = this.props.tree.error.data.get() || {};
+        const errorTexts = prepareErrorTexts(errors, titleMap);
+
         return (
             <GridWrapper>
                 <Grid>
@@ -65,6 +147,8 @@ const Patient = schema({})(React.createClass({
                                     <Form.Field>
                                         <label>MRN</label>
                                         <Input
+                                            disabled={disabled}
+                                            error={!!errors.mrnHash}
                                             cursor={patientCursor.mrn}
                                         />
                                     </Form.Field>
@@ -73,18 +157,24 @@ const Patient = schema({})(React.createClass({
                                     <Form.Field>
                                         <label>First name</label>
                                         <Input
+                                            disabled={disabled}
+                                            error={!!errors.firstName}
                                             cursor={patientCursor.firstName}
                                         />
                                     </Form.Field>
                                     <Form.Field>
                                         <label>Last name</label>
                                         <Input
+                                            disabled={disabled}
+                                            error={!!errors.lastName}
                                             cursor={patientCursor.lastName}
                                         />
                                     </Form.Field>
                                     <Form.Field>
                                         <label>Sex</label>
                                         <Select
+                                            disabled={disabled}
+                                            error={!!errors.sex}
                                             cursor={patientCursor.sex}
                                             placeholder="Select Sex"
                                             options={
@@ -98,6 +188,8 @@ const Patient = schema({})(React.createClass({
                                     <Form.Field>
                                         <label>Date of birth</label>
                                         <DatePicker
+                                            disabled={disabled}
+                                            error={!!errors.dateOfBirth}
                                             cursor={patientCursor.dateOfBirth}
                                             showYearDropdown
                                         />
@@ -105,7 +197,9 @@ const Patient = schema({})(React.createClass({
                                     <Form.Field>
                                         <label>Race</label>
                                         <Select
+                                            disabled={disabled}
                                             cursor={patientCursor.race}
+                                            error={!!errors.race}
                                             placeholder="Select Race"
                                             options={_.map(this.context.races,
                                                         (text, value) => ({ text, value }))}
@@ -113,11 +207,26 @@ const Patient = schema({})(React.createClass({
                                     </Form.Field>
                                 </Form.Group>
                                 <Button
+                                    loading={loading}
+                                    disabled={disabled}
                                     type="submit"
                                     color="pink"
                                 >
                                     Submit
                                 </Button>
+                                {
+                                    saved
+                                    ?
+                                    (
+                                        <Message positive>
+                                            <Message.Header>Succeed</Message.Header>
+                                            <p>The patient data is succesfully saved</p>
+                                        </Message>
+                                    )
+                                    :
+                                    null
+                                }
+                                <FormErrorMessages errorTexts={errorTexts}/>
                             </Form>
                         </Grid.Column>
                     </Grid.Row>

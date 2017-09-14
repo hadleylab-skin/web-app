@@ -11,6 +11,7 @@
     "baobab-prop-types": "1.0.1",
     "lodash": "4.17.4",
     "moment": "2.17.1",
+    "tv4": "1.3.0",
     "crypto-js": "3.1.9-1",
     "jsencrypt": "See https://github.com/travist/jsencrypt/issues/103 why we use fork",
     "jsencrypt": "git+https://git@github.com/beda-software/jsencrypt.git",

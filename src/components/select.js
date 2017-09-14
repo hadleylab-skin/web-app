@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Dropdown as SelectUI } from 'semantic-ui-react';
 
 export function Select({ cursor, ...props }) {
-    let value = cursor.get();
+    let value = `${cursor.get()}`;
     if (!_.includes(_.map(props.options, (o) => o.value), value)) {
         value = undefined;
     }
