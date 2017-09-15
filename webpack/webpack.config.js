@@ -48,7 +48,7 @@ module.exports = _.merge(webpackConfig, {
             },
         }),
         new webpack.DefinePlugin({
-            API_SERVER: process.env.API_SERVER,
+            API_SERVER: `"${process.env.API_SERVE}"`,
         }),
     ],
 });
