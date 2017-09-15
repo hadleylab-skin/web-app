@@ -107,7 +107,7 @@ const PatientMoleList = schema(model)(React.createClass({
                         <Table.Row
                             key={id}
                         >
-                            <Table.Cell>{moment(mole.data.lastImage.dateCreated).format('MMM d, YYYY')}</Table.Cell>
+                            <Table.Cell>{moment(mole.data.lastImage.dateCreated).format('MMM D, YYYY')}</Table.Cell>
                             <Table.Cell>
                                 {this.renderAnatomicalSite(mole.data.anatomicalSites)}
                             </Table.Cell>
@@ -192,7 +192,7 @@ const PatientMoleList = schema(model)(React.createClass({
                         <Grid.Column width={4}>
                             <Checkbox
                                 cursor={this.props.tree.requireAttention}
-                                label="Show only patients require attention"
+                                label="Show only moles require attention"
                             />
                         </Grid.Column>
                         <Grid.Column width={2}>

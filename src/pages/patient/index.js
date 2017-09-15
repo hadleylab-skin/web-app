@@ -77,7 +77,7 @@ const Patient = schema({})(React.createClass({
 
     componentWillMount() {
         const patientCursor = this.props.patientCursor;
-        if (_.isEmpty(patientCursor.get())) {
+        if (_.isEmpty(moleImagesCursor.get()) || moleImagesCursor.status.get() === 'Loading') {
             patientCursor.on('update', this.setupAndUnsubscribe);
         } else {
             this.props.tree.set(patientCursor.get());

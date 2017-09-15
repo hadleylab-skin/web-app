@@ -78,7 +78,7 @@ const PatientList = schema(model)(React.createClass({
                 </Table.Header>
                 <Table.Body>
                     { _.map(visiblePatients, (patient) => {
-                        let dateOfBirth = moment(patient.data.dateOfBirth).format('MMM d, YYYY');
+                        let dateOfBirth = moment(patient.data.dateOfBirth).format('MMM D, YYYY');
                         return (
                             <Table.Row key={patient.data.pk}>
                                 {_.map([

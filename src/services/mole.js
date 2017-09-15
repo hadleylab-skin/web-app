@@ -37,7 +37,7 @@ function dehydrateMoleData(data) {
             data: {
                 approved,
                 biopsy,
-                biopsyData: JSON.parse(biopsyData),
+                biopsyData,
                 clinicalDiagnosis,
                 pathDiagnosis,
             },
