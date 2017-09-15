@@ -91,6 +91,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
+            hash: true,
             template: 'template.html',
         }),
         new webpack.SourceMapDevToolPlugin({
