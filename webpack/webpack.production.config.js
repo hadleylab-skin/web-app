@@ -102,5 +102,8 @@ module.exports = {
                 context: __dirname,
             },
         }),
+        new webpack.DefinePlugin({
+            API_SERVER: process.env.API_SERVER,
+        }),
     ],
 };

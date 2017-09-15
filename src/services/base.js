@@ -16,7 +16,7 @@ export const defaultHeaders = {
     'Content-Type': 'application/json',
 };
 
-export const url = 'http://127.0.0.1:8000';
+export const url = API_SERVER;
 
 export function buildGetService(path,
                                 dehydrate = _.identity,

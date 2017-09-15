@@ -7,10 +7,27 @@ variables:
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
   BUILD_IMAGE: skiniq-ios:$CI_BUILD_REF
 
-build:
+build_generic:
   stage: build
   script:
     - docker build -t $BUILD_IMAGE .
+  except:
+    - master
+    - develop
+
+build_staging:
+  stage: build
+  script:
+    - docker build --build-arg API_SERVER=http://52.203.29.88 -t $BUILD_IMAGE .
+  only:
+    - develop
+
+build_production:
+  stage: build
+  script:
+    - docker build --build-arg API_SERVER=https://api.skiniq.co -t $BUILD_IMAGE .
+  only:
+    - master
 
 release:
   stage: release
