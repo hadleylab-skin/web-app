@@ -1,12 +1,17 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
-import { Table, Grid, Header, Image, Label, } from 'semantic-ui-react';
+import moment from 'moment';
+import { Table, Grid, Header, Image, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { GridWrapper } from 'components';
+import { GridWrapper, Checkbox, Select } from 'components';
 import schema from 'libs/state';
 
 const model = (props, context) => ({
+    tree: {
+        requireAttention: false,
+        anatomicalSite: null,
+    },
     patientMolesCursor: (c) => context.services.getPatientMolesService(props.id, c),
 });
 
@@ -21,6 +26,8 @@ export const PatientMoleListPage = React.createClass({
 const PatientMoleList = schema(model)(React.createClass({
     propTypes: {
         id: React.PropTypes.string.isRequired,
+        tree: BaobabPropTypes.cursor.isRequired,
+        patient: React.PropTypes.object,
         patientMolesCursor: BaobabPropTypes.cursor.isRequired,
     },
 
@@ -37,32 +44,41 @@ const PatientMoleList = schema(model)(React.createClass({
         }
         return (
             <Link to={`/patient/${this.props.id}/mole/${mole.data.pk}`}>
-                <Image src={photo} size="tiny" />
-                {
-                    mole.data.imagesWithDiagnoseRequired
-                    ?
-                    (
-                        <Label color="red" basic>
-                            Diagnose Required for {mole.data.imagesWithDiagnoseRequired}/{mole.data.imagesCount}
-                        </Label>
-                    )
-                    :
-                    null
-                }
-                {
-                    mole.data.imagesApproveRequired
-                    ?
-                    (
-                        <Label color="red" basic>
-                            Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount}
-                        </Label>
-                    )
-                    :
-                    null
-                }
-                <Label basic>
-                    Total: {mole.data.imagesCount}
-                </Label>
+
+                <Grid>
+                    <Grid.Row>
+                        <Grid.Column width={6}>
+                            <Image src={photo} size="tiny" />
+                        </Grid.Column>
+                        <Grid.Column width={10}>
+                            {
+                                mole.data.imagesWithDiagnoseRequired
+                                ?
+                                (
+                                    <div><Label color="red" basic>
+                                        Diagnose Required for {mole.data.imagesWithDiagnoseRequired}/{mole.data.imagesCount} images
+                                    </Label><br /></div>
+                                )
+                                :
+                                null
+                            }
+                            {
+                                mole.data.imagesApproveRequired
+                                ?
+                                (
+                                    <div><Label color="red" basic>
+                                        Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount} images
+                                    </Label><br /></div>
+                                )
+                                :
+                                null
+                            }
+                            <Label basic>
+                                Total: {mole.data.imagesCount} images
+                            </Label>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
             </Link>
         );
     },
@@ -72,11 +88,9 @@ const PatientMoleList = schema(model)(React.createClass({
                 .map((site) => site.name)
                 .join('/')
                 .value();
-
     },
 
-    renderTable() {
-        const moles = this.props.patientMolesCursor.data.get();
+    renderTable(moles) {
         return (
             <Table celled>
                 <Table.Header>
@@ -93,7 +107,7 @@ const PatientMoleList = schema(model)(React.createClass({
                         <Table.Row
                             key={id}
                         >
-                            <Table.Cell>{mole.data.lastImage.dateCreated}</Table.Cell>
+                            <Table.Cell>{moment(mole.data.lastImage.dateCreated).format('MMM D, YYYY')}</Table.Cell>
                             <Table.Cell>
                                 {this.renderAnatomicalSite(mole.data.anatomicalSites)}
                             </Table.Cell>
@@ -107,6 +121,18 @@ const PatientMoleList = schema(model)(React.createClass({
         );
     },
 
+    renderPatientName() {
+        if (!this.props.patient) {
+            return null;
+        }
+        const patientName = `${this.props.patient.firstName} ${this.props.patient.lastName}`;
+        return (
+            <Link to={`/patient/${this.props.patient.pk}`}>
+                {patientName}
+            </Link>
+        );
+    },
+
     render() {
         const moles = this.props.patientMolesCursor.get();
         if (moles.status !== 'Succeed') {
@@ -116,18 +142,66 @@ const PatientMoleList = schema(model)(React.createClass({
                 </div>
             );
         }
+        const total = _.values(moles.data).length;
+        const requireAttention = this.props.tree.requireAttention.get();
+        const selectedAnatomicalSite = this.props.tree.anatomicalSite.get();
+        const visibleMoles = _.filter(moles.data, (mole) => {
+            if (requireAttention &&
+                mole.data.imagesApproveRequired === 0 &&
+                mole.data.imagesWithDiagnoseRequired === 0) {
+                return false;
+            }
+            if (selectedAnatomicalSite) {
+                return _.last(mole.data.anatomicalSites).pk === selectedAnatomicalSite;
+            }
+            return true;
+        });
+        const availableAnatomicalSites =
+            _.chain(moles.data)
+            .map((mole) => mole.data.anatomicalSites)
+            .map((sites) => ({
+                text: _.join(_.map(sites, (s) => s.name), '/'),
+                value: _.last(sites).pk,
+            }))
+            .uniqBy((option) => option.value)
+            .value();
+
+        const options =
+            _.flatten([[{ text: 'All', value: null }], availableAnatomicalSites]);
+
         return (
             <GridWrapper>
                 <Grid>
                     <Grid.Row />
                     <Grid.Row>
                         <Grid.Column>
-                            <Header>Patient moles</Header>
+                            <Header>Patient {this.renderPatientName()} moles</Header>
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column width={6}>
+                            <Select
+                                search
+                                selection
+                                fluid
+                                placeholder="filter by anatomical site"
+                                cursor={this.props.tree.anatomicalSite}
+                                options={options}
+                            />
+                        </Grid.Column>
+                        <Grid.Column width={4}>
+                            <Checkbox
+                                cursor={this.props.tree.requireAttention}
+                                label="Show only moles require attention"
+                            />
+                        </Grid.Column>
+                        <Grid.Column width={2}>
+                            {visibleMoles.length} from {total}
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column>
-                            {this.renderTable()}
+                            {this.renderTable(visibleMoles)}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

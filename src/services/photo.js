@@ -17,7 +17,7 @@ function dehydrateMolePhotoData(data) {
         data: {
             approved,
             biopsy,
-            biopsyData: JSON.parse(biopsyData),
+            biopsyData,
             clinicalDiagnosis,
             pathDiagnosis,
         },
@@ -60,14 +60,6 @@ export function getMolePhotoService({ token }) {
     };
 }
 
-function dehydrateUpdateMolePhotoData(imageData) {
-    let data = imageData;
-
-    data.biopsyData = JSON.parse(imageData.biopsyData);
-
-    return data;
-}
-
 export function updateMolePhotoService({ token }) {
     const headers = {
         Accept: 'application/json',
@@ -79,7 +71,7 @@ export function updateMolePhotoService({ token }) {
             `/api/v1/patient/${patientPk}/mole/${molePk}/image/${imagePk}/`,
             'PATCH',
             JSON.stringify,
-            dehydrateUpdateMolePhotoData,
+            _.identity,
             _.merge({}, defaultHeaders, headers));
         return _service(cursor, data);
     };

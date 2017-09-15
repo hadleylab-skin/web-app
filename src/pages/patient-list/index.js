@@ -1,14 +1,16 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
-import { Table, Grid, Header, Image, Label } from 'semantic-ui-react';
+import moment from 'moment';
+import { Table, Grid, Header, Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { GridWrapper, Input } from 'components';
+import { GridWrapper, Input, Consent, PatientMolesInfo, Checkbox } from 'components';
 import schema from 'libs/state';
 
 const model = {
     tree: {
         search: '',
+        requireAttention: false,
     },
 };
 
@@ -61,8 +63,7 @@ const PatientList = schema(model)(React.createClass({
         return this.context.mapRace(race);
     },
 
-    renderTable() {
-        const patients = this.props.patientsCursor.get();
+    renderTable(visiblePatients) {
         return (
             <Table celled>
                 <Table.Header>
@@ -71,68 +72,32 @@ const PatientList = schema(model)(React.createClass({
                         <Table.HeaderCell>Date of birth</Table.HeaderCell>
                         <Table.HeaderCell>Sex</Table.HeaderCell>
                         <Table.HeaderCell>Race</Table.HeaderCell>
-                        <Table.HeaderCell>Mole images</Table.HeaderCell>
+                        <Table.HeaderCell>Moles information</Table.HeaderCell>
                         <Table.HeaderCell>Consent</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    { _.chain(patients.data)
-                        .filter((patient) => {
-                            const search = _.toLower(this.props.tree.search.get());
-                            return _.isEmpty(search) ||
-                                _.includes(_.toLower(patient.data.mrn), search) ||
-                                _.includes(_.toLower(patient.data.firstName), search) ||
-                                _.includes(_.toLower(patient.data.lastName), search);
-                        })
-                        .map((patient) => (
+                    { _.map(visiblePatients, (patient) => {
+                        let dateOfBirth = moment(patient.data.dateOfBirth).format('MMM D, YYYY');
+                        return (
                             <Table.Row key={patient.data.pk}>
                                 {_.map([
-                                    (
-                                        <Link to={`/patient/${patient.data.pk}`}>
-                                            {patient.data.firstName} {patient.data.lastName} {this.formatMrn(patient.data.mrn)}
-                                        </Link>
-                                    ),
-                                    patient.data.dateOfBirth,
+                                    (<Link to={`/patient/${patient.data.pk}`}>
+                                        {patient.data.firstName} {patient.data.lastName} {this.formatMrn(patient.data.mrn)}
+                                    </Link>),
+                                    ((dateOfBirth === 'Invalid date') ? null : dateOfBirth),
                                     this.renderSex(patient.data.sex),
                                     this.renderRace(patient.data.race),
-                                    (
-                                        <Link to={`/patient/${patient.data.pk}/moles`}>
-                                            {
-                                                patient.data.moleImagesWithDiagnoseRequired
-                                                ?
-                                                (
-                                                    <Label color="red" basic>
-                                                        Diagnose Required for {patient.data.moleImagesWithDiagnoseRequired}/{patient.data.molesImagesCount}
-                                                    </Label>
-                                                )
-                                                : null
-                                            }
-                                            {
-                                                patient.data.moleImagesApproveRequired
-                                                ?
-                                                (
-                                                    <Label color="red" basic>
-                                                        Approve required for {patient.data.moleImagesApproveRequired}/{patient.data.molesImagesCount}
-                                                    </Label>
-                                                )
-                                                :
-                                                null
-                                            }
-                                            <Label basic>
-                                                Total: {patient.data.molesImagesCount}
-                                            </Label>
-                                        </Link>
-                                    ),
-                                    this.renderPhoto(patient.data.validConsent.signature)],
+                                    (<PatientMolesInfo patient={patient.data} />),
+                                    (<Consent noPhoto consent={patient.data.validConsent} />)],
                                 (data, index) => (
                                     <Table.Cell key={`${patient.data.pk}-${index}`}>
                                         {data}
                                     </Table.Cell>))
                                 }
                             </Table.Row>
-                        ))
-                        .value()
-                    }
+                        );
+                    })}
                 </Table.Body>
             </Table>
         );
@@ -147,6 +112,20 @@ const PatientList = schema(model)(React.createClass({
                 </div>
             );
         }
+        const total = _.values(patients.data).length;
+        const requireAttention = this.props.tree.requireAttention.get();
+        const visiblePatients = _.filter(patients.data, (patient) => {
+            const search = _.toLower(this.props.tree.search.get());
+            if (requireAttention &&
+                patient.data.moleImagesApproveRequired === 0 &&
+                patient.data.moleImagesWithDiagnoseRequired === 0) {
+                return false;
+            }
+            return _.isEmpty(search) ||
+                _.includes(_.toLower(patient.data.mrn), search) ||
+                _.includes(_.toLower(patient.data.firstName), search) ||
+                _.includes(_.toLower(patient.data.lastName), search);
+        });
 
         return (
             <GridWrapper>
@@ -166,10 +145,19 @@ const PatientList = schema(model)(React.createClass({
                                 cursor={this.props.tree.search}
                             />
                         </Grid.Column>
+                        <Grid.Column width={4}>
+                            <Checkbox
+                                cursor={this.props.tree.requireAttention}
+                                label="Show only patients require attention"
+                            />
+                        </Grid.Column>
+                        <Grid.Column width={4}>
+                            {visiblePatients.length} from {total}
+                        </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column>
-                            {this.renderTable()}
+                            {this.renderTable(visiblePatients)}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

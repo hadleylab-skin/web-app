@@ -1,10 +1,12 @@
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
+import moment from 'moment';
 import tv4 from 'tv4';
 import { GridWrapper, Input,
          DatePicker, Select,
          FormErrorMessages, prepareErrorTexts,
+         Consent, PatientMolesInfo,
 } from 'components';
 import { Grid, Header, Image, Form, Button, Message } from 'semantic-ui-react';
 
@@ -75,7 +77,7 @@ const Patient = schema({})(React.createClass({
 
     componentWillMount() {
         const patientCursor = this.props.patientCursor;
-        if (_.isEmpty(patientCursor.get())) {
+        if (_.isEmpty(moleImagesCursor.get()) || moleImagesCursor.status.get() === 'Loading') {
             patientCursor.on('update', this.setupAndUnsubscribe);
         } else {
             this.props.tree.set(patientCursor.get());
@@ -116,7 +118,10 @@ const Patient = schema({})(React.createClass({
             return null;
         }
         return (
-            <Image src={photo} size="large" />
+            <div>
+                <Image src={photo} size="large" />
+                <br />
+            </div>
         );
     },
 
@@ -133,17 +138,23 @@ const Patient = schema({})(React.createClass({
             <GridWrapper>
                 <Grid>
                     <Grid.Row>
+                        <Grid.Column width={2} />
+                        <Grid.Column width={14}>
+                            <Header>
+                                {`Patient ${patientCursor.firstName.get()} ${patientCursor.lastName.get()}`}
+                            </Header>
+                        </Grid.Column >
+                    </Grid.Row>
+                    <Grid.Row>
                         <Grid.Column width={2}>
                             {this.renderPhoto(patientCursor.photo.get('thumbnail'))}
+                            <Consent consent={patientCursor.validConsent.get()} />
                         </Grid.Column>
-                        <Grid.Column width={14}>
+                        <Grid.Column width={7}>
                             <Form
                                 onSubmit={this.submit}
                             >
-                                <Header>
-                                    {`Patient ${patientCursor.firstName.get()} ${patientCursor.lastName.get()}`}
-                                </Header>
-                                <Form.Group>
+                               <Form.Group>
                                     <Form.Field>
                                         <label>MRN</label>
                                         <Input
@@ -188,6 +199,7 @@ const Patient = schema({})(React.createClass({
                                     <Form.Field>
                                         <label>Date of birth</label>
                                         <DatePicker
+                                            maxDate={moment()}
                                             disabled={disabled}
                                             error={!!errors.dateOfBirth}
                                             cursor={patientCursor.dateOfBirth}
@@ -228,6 +240,12 @@ const Patient = schema({})(React.createClass({
                                 }
                                 <FormErrorMessages errorTexts={errorTexts}/>
                             </Form>
+                        </Grid.Column>
+                        <Grid.Column width={4}>
+                            <Header as="p">
+                                Moles information
+                            </Header>
+                            <PatientMolesInfo patient={patientCursor.get()} />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

@@ -16,10 +16,12 @@ import { InnerLayout } from './layout';
 const model = (props, context) => ({
     tree: {
         patients: context.services.patientsService,
-        patientScreen: {},
-        moleScreen: {},
         patientsMoles: {},
         molesImages: {},
+
+        patientMolesScreen: {},
+        patientScreen: {},
+        moleScreen: {},
     },
 });
 
@@ -42,6 +44,7 @@ export const AppRouter = schema(model)(React.createClass({
         const molesImagesCursor = this.props.tree.molesImages;
         const moleScreenCursor = this.props.tree.moleScreen;
         const patientScreenCursor = this.props.tree.patientScreenCursor;
+        const patientMolesScreenCursor = this.props.tree.patientMolesScreen;
         return (
             <HashRouter>
                 <InnerLayout
@@ -76,10 +79,13 @@ export const AppRouter = schema(model)(React.createClass({
                         path="/patient/:id/moles"
                         render={(props) => {
                             const id = props.match.params.id;
+                            const patientCursor = patientsCursor.data.select(id);
                             const patientMolesCursor = patientsMolesCursor.select(id);
                             return (
                                 <PatientMoleListPage
                                     id={id}
+                                    tree={patientMolesScreenCursor.select(id)}
+                                    patient={patientCursor.data.get()}
                                     patientMolesCursor={patientMolesCursor}
                                 />
                             );
