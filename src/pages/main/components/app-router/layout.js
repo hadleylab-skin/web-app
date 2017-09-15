@@ -16,13 +16,13 @@ export const InnerLayout = React.createClass({
                                     Patients list
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item
+                            {/* <Menu.Item
                                 active={location.pathname === '/doctor-info'}
-                            >
+                                >
                                 <Link to="/doctor-info">
-                                    Doctor info
+                                Doctor info
                                 </Link>
-                            </Menu.Item>
+                                </Menu.Item> */}
                             <Menu.Item
                                 position="right"
                             >

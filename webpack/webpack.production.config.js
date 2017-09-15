@@ -96,12 +96,6 @@ module.exports = {
         new webpack.SourceMapDevToolPlugin({
             filename: '[name].map.js',
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                warnings: false,
-            },
-        }),
         new webpack.LoaderOptionsPlugin({
             options: {
                 minimize: true,

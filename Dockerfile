@@ -6,3 +6,4 @@ RUN yarn
 RUN mkdir -p /app
 ADD . /app
 WORKDIR /app
+RUN yarn build-web
