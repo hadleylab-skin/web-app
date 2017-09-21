@@ -4,7 +4,7 @@ import _ from 'lodash';
 import schema from 'libs/state';
 import { Button, Form, Input, Icon } from 'semantic-ui-react';
 import { FormErrorMessages, prepareErrorTexts } from 'components';
-import { loginService } from 'services/login';
+import { loginService } from 'services/auth';
 
 const model = {
     tree: {

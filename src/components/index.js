@@ -1,5 +1,6 @@
 export { ServiceProvider } from './service-provider';
-export { GridWrapper } from './layout.js';
+export { GridWrapper } from './grid-layout';
+export { BaseWrapper } from './base-layout';
 export { Input } from './input';
 export { DatePicker } from './date-picker';
 export { Select } from './select';

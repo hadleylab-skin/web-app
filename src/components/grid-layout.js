@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid, Segment } from 'semantic-ui-react';
 
-
 export const GridWrapper = React.createClass({
     render() {
         return (
