@@ -7,7 +7,7 @@ const padding = CryptoJS.pad.Pkcs7;
 const mode = CryptoJS.mode.CBC;
 
 function getPrivateKey() {
-    const password = tree.get('loginPage', 'password');
+    const password = tree.get('main','loginPage','password');
     const encryptedPrivateKey = tree.get('token', 'data', 'doctor', 'data', 'privateKey');
     return decryptAES(encryptedPrivateKey, password);
 }
