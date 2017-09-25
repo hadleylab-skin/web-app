@@ -1,8 +1,15 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: {
+        vendor: [
+            'babel-polyfill', 'react', 'react-dom', 'react-router-dom',
+            'react-datepicker', 'semantic-ui-react',
+            'baobab', 'baobab-prop-types', 'lodash', 'classnames',
+            'crypto-js', 'jsencrypt', 'moment', 'tv4',
+        ],
         app: './src/index.js',
     },
     output: {
@@ -26,7 +33,12 @@ module.exports = {
                         loader: 'babel-loader',
                         options: {
                             presets: ['react', ['es2015', { loose: true }]],
-                            plugins: ['transform-object-rest-spread'],
+                            plugins: [
+                                'transform-object-rest-spread',
+                                'transform-async-functions',
+                                'transform-async-to-generator',
+                                'transform-async-to-module-method',
+                            ],
                         },
                     },
                 ],
@@ -103,8 +115,22 @@ module.exports = {
                 context: __dirname,
             },
         }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            filename: 'vendor.js',
+        }),
+        new UglifyJSPlugin({
+            uglifyOptions: {
+                compress: {
+                    warnings: false,
+                },
+            },
+        }),
         new webpack.DefinePlugin({
             API_SERVER: `"${process.env.API_SERVER}"`,
+             'process.env': {
+                 NODE_ENV: JSON.stringify('production')
+             },
         }),
     ],
 };
