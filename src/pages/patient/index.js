@@ -129,7 +129,7 @@ const Patient = schema({})(React.createClass({
         const patientCursor = this.props.tree.data;
         const status = this.props.patientCursor.status.get();
         const disabled = !status;
-        const loading = status === 'Loading';
+        const loading = status === 'Loading' || typeof status === 'undefined';
         const saved = this.props.tree.saved.get();
         const errors = this.props.tree.error.data.get() || {};
         const errorTexts = prepareErrorTexts(errors, titleMap);
@@ -245,7 +245,7 @@ const Patient = schema({})(React.createClass({
                             <Header as="p">
                                 Moles information
                             </Header>
-                            <PatientMolesInfo patient={patientCursor.get()} />
+                            {loading ? null : <PatientMolesInfo patient={this.props.patientCursor.data.get()} />}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
