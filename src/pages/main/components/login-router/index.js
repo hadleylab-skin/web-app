@@ -45,7 +45,7 @@ export const LoginRouter = schema(model)(React.createClass({
     },
 
     logout() {
-        this.props.tree.tree.set({});
+        this.props.tree.set(model.tree);
     },
 
     render() {
