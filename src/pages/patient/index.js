@@ -46,9 +46,8 @@ const patientValidationSchema = {
         },
         mrn: {
             type: 'string',
-            pattern: '^\\d+$',
+            pattern: '^\\d{0,9}$',
             message: 'MRN should be an integer number, less than 10 digits',
-            maxLength: 10,
         },
     },
     required: ['firstName', 'lastName'],

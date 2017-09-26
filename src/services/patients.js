@@ -25,6 +25,9 @@ function dehydratePatientData(data) {
             dehydratedData[key] = decryptAES(value, aesKey);
         }
     });
+    if (dehydratedData.mrn === null) {
+        dehydratedData.mrn = '';
+    }
     return dehydratedData;
 }
 
