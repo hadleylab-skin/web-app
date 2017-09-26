@@ -4,6 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Table, Grid, Header, Image, Button, Modal, Form, Label } from 'semantic-ui-react';
 import { GridWrapper, Input, Checkbox } from 'components';
+import { Link } from 'react-router-dom';
 import schema from 'libs/state';
 import { convertCmToIn, convertInToCm } from 'libs/misc';
 
@@ -243,6 +244,7 @@ const MoleImageList = schema(model)(React.createClass({
                         }
                         <Grid.Column width={8}>
                             <Header>Patient mole's images ({mole.data.anatomicalSite.data.name})</Header>
+                            <Link to={`/patient/${this.props.patientId}/moles`}>See all moles</Link>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
