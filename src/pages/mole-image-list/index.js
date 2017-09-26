@@ -71,9 +71,13 @@ const MoleImageList = schema(model)(React.createClass({
             const data = cursor.get('data');
             const service = this.context.services.updateMolePhotoService;
             const result = await service(this.props.patientId, this.props.moleId, id, cursor, data);
-            await this.props.updateParent();
             this.props.moleImagesCursor.data.images.select(id).data.info.set(result);
+            await this.props.updateParent();
         };
+    },
+
+    isLoading(id) {
+        return this.props.tree.mole.data.images.select(id).data.info.status.get() === 'Loading';
     },
 
     renderPhoto(photo) {
@@ -194,7 +198,7 @@ const MoleImageList = schema(model)(React.createClass({
                                     disabled={this.isButtonDiabled(image.data.pk)}
                                     onClick={this.save(image.data.pk)}
                                     color="pink"
-                                    loading={cursor.select(image.data.pk).image.data.info.status.get() === 'Loading'}
+                                    loading={this.isLoading(image.data.pk)}
                                 >
                                     Save
                                 </Button>
