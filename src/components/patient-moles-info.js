@@ -19,7 +19,7 @@ export function PatientMolesInfo({ patient }) {
                 (
                     <div><Label color="red" basic>
                         Diagnose Required for {patient.moleImagesWithDiagnoseRequired}/{patient.molesImagesCount} images
-                    </Label><br /></div>
+                    </Label><br /><br /></div>
                 )
                 : null
             }
@@ -29,13 +29,13 @@ export function PatientMolesInfo({ patient }) {
                 (
                     <div><Label color="red" basic>
                         Approve required for {patient.moleImagesApproveRequired}/{patient.molesImagesCount} images
-                    </Label><br /></div>
+                    </Label><br /><br /></div>
                 )
                 :
                 null
             }
-            <Label basic>
-                Total: {patient.molesCount} moles
-            </Label>
+                <Label basic>
+                    Total: {patient.molesCount} moles
+                </Label>
         </Link>);
 }
