@@ -217,7 +217,7 @@ const MoleImageList = schema(model)(React.createClass({
         const images = this.props.tree.mole.data.images.get();
         const total = _.values(images).length;
         const requireAttention = this.props.tree.requireAttention.get();
-        const visibleImages = _.filter(images, (image)=> {
+        const visibleImages = _.filter(images, (image) => {
             if (requireAttention) {
                 const info = image.data.info.data;
                 return info.approved === false ||
@@ -232,7 +232,16 @@ const MoleImageList = schema(model)(React.createClass({
                 <Grid>
                     <Grid.Row />
                     <Grid.Row>
-                        <Grid.Column>
+                        {
+                            mole.data.patientAnatomicalSite
+                        ?
+                            <Grid.Column width={4}>
+                                <Image src={mole.data.patientAnatomicalSite.distantPhoto.thumbnail}/>
+                            </Grid.Column>
+                        :
+                            null
+                        }
+                        <Grid.Column width={8}>
                             <Header>Patient mole's images ({mole.data.anatomicalSite.data.name})</Header>
                         </Grid.Column>
                     </Grid.Row>
