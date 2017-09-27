@@ -5,6 +5,7 @@ import {
     Route,
 } from 'react-router-dom';
 import { DoctorPage,
+         DoctorResistrationRequestsPage,
          PatientListPage,
          PatientPage,
          PatientMoleListPage,
@@ -21,6 +22,7 @@ const model = (props, context) => ({
 
         patientMolesScreen: {},
         patientScreen: {},
+        registrationRequestsScreen: {},
         moleScreen: {},
     },
 });
@@ -32,6 +34,9 @@ export const AppRouter = schema(model)(React.createClass({
     },
 
     contextTypes: {
+        cursors: React.PropTypes.shape({
+            doctor: BaobabPropTypes.cursor.isRequired,
+        }),
         services: React.PropTypes.shape({
             patientsService: React.PropTypes.func.isRequired,
             getPatientMolesService: React.PropTypes.func.isRequired,
@@ -39,15 +44,18 @@ export const AppRouter = schema(model)(React.createClass({
     },
 
     render() {
+        const { isCoordinator } = this.context.cursors.doctor.data.get();
         const patientsCursor = this.props.tree.patients;
         const patientsMolesCursor = this.props.tree.patientsMoles;
         const molesImagesCursor = this.props.tree.molesImages;
         const moleScreenCursor = this.props.tree.moleScreen;
         const patientScreenCursor = this.props.tree.patientScreenCursor;
         const patientMolesScreenCursor = this.props.tree.patientMolesScreen;
+        const registrationRequestsScreenCursor = this.props.tree.registrationRequestsScreen;
         return (
             <HashRouter>
                 <InnerLayout
+                    isCoordinator={isCoordinator}
                     logout={this.props.logout}
                 >
                     <Route
@@ -115,6 +123,21 @@ export const AppRouter = schema(model)(React.createClass({
                             );
                         }}
                     />
+                    {
+                        isCoordinator
+                    ?
+                        <Route
+                            exact
+                            path="/doctor-registration-requests"
+                            render={() => (
+                                <DoctorResistrationRequestsPage
+                                    tree={registrationRequestsScreenCursor}
+                                />
+                            )}
+                        />
+                    :
+                        null
+                    }
 
                     <Route
                         exact

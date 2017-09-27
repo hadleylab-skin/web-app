@@ -1,4 +1,8 @@
-import { updateDoctorService,getDoctorService } from './doctor';
+import { updateDoctorService,
+         getDoctorService,
+         getDoctorResistrationRequestsService,
+         handleDoctorRegistrationRequestService,
+       } from './doctor';
 import { getPatientMolesService,
          addMoleService,
          getMoleService,
@@ -20,6 +24,8 @@ import { patientsService,
 export default {
     updateDoctorService,
     getDoctorService,
+    getDoctorResistrationRequestsService,
+    handleDoctorRegistrationRequestService,
     getPatientMolesService,
     addMoleService,
     getMoleService,

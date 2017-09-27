@@ -71,7 +71,7 @@ export function buildPostService(path,
             const dehydratedData = dehydrate(respData);
             result = {
                 status: 'Succeed',
-                data: dehydratedData,
+                data: respData ? dehydratedData : cursor.get('data'),
             };
             cursor.set(result);
         } catch (error) {
@@ -104,4 +104,8 @@ export function hydrateImage(uri) {
     };
 
     return photo;
+}
+
+export function convertListToDict(list) {
+    return _.keyBy(list, (patient) => patient.data.pk);
 }
