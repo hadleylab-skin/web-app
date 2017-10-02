@@ -59,7 +59,7 @@ export function buildPostService(path,
             let response = await fetch(`${url}${path}`, payload);
             let respData;
             if (response.status === 204) {
-                response = {
+                result = {
                     status: 'Succeed',
                     data: cursor.get(),
                 };
