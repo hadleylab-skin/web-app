@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Menu } from 'semantic-ui-react';
 
-export const BaseLayout = React.createClass({
+export const BaseWrapper = React.createClass({
     render() {
         return (
             <Container fluid>

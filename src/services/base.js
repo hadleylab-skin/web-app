@@ -1,17 +1,5 @@
 import _ from 'lodash';
 
-export function checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
-        return response;
-    }
-    return response.json().then((data) => {
-        throw {
-            response,
-            data,
-        };
-    });
-}
-
 export const defaultHeaders = {
     'Content-Type': 'application/json',
 };
@@ -26,14 +14,19 @@ export function buildGetService(path,
         let result = {};
 
         try {
-            let response = await fetch(`${url}${path}`,
-                                       { headers }).then(checkStatus);
+            let response = await fetch(`${url}${path}`, { headers });
             const data = await response.json();
-            const dehydratedData = dehydrate(data);
-            result = {
-                data: dehydratedData,
-                status: 'Succeed',
-            };
+            if (response.status >= 400) {
+                result = {
+                    status: 'Failure',
+                    error: { data },
+                };
+            } else {
+                result = {
+                    status: 'Succeed',
+                    data: dehydrate(data),
+                };
+            }
         } catch (error) {
             console.log(error);
             result = {
@@ -63,22 +56,40 @@ export function buildPostService(path,
         };
 
         try {
-            let response = await fetch(`${url}${path}`, payload).then(checkStatus);
-            let respData = await response.json();
-            const dehydratedData = dehydrate(respData);
-            result = {
-                status: 'Succeed',
-                data: dehydratedData,
-            };
-            cursor.set(result);
+            let response = await fetch(`${url}${path}`, payload);
+            let respData;
+            if (response.status === 204) {
+                result = {
+                    status: 'Succeed',
+                    data: cursor.get(),
+                };
+            } else if (response.status >= 400) {
+                respData = await response.json();
+                result = {
+                    status: 'Failure',
+                    error: {
+                        data: respData,
+                    },
+                };
+            } else {
+                respData = await response.json();
+                result = {
+                    status: 'Succeed',
+                    data: dehydrate(respData),
+                };
+            }
         } catch (error) {
             console.log(error);
             result = {
                 error,
                 status: 'Failure',
             };
+        }
+        if (result.status === 'Failure') {
             cursor.set('error', result.error);
             cursor.set('status', result.status);
+        } else {
+            cursor.set(result);
         }
         return result;
     };
@@ -101,4 +112,8 @@ export function hydrateImage(uri) {
     };
 
     return photo;
+}
+
+export function convertListToDict(list) {
+    return _.keyBy(list, (patient) => patient.data.pk);
 }

@@ -3,9 +3,8 @@ import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import { Container, Header, Image, Grid } from 'semantic-ui-react';
 import schema from 'libs/state';
-import { ServiceProvider } from 'components';
+import { ServiceProvider, BaseWrapper } from 'components';
 import { getRacesList } from 'services/constants';
-import { BaseLayout } from './layout';
 import { LoginForm } from './login-form';
 import { AppRouter } from '../app-router';
 import step1 from './assets/step1.png';
@@ -46,14 +45,14 @@ export const LoginRouter = schema(model)(React.createClass({
     },
 
     logout() {
-        this.props.tree.tree.set({});
+        this.props.tree.set(model.tree);
     },
 
     render() {
         const token = this.props.tree.token.get() || {};
         if (token.status !== 'Succeed') {
             return (
-                <BaseLayout>
+                <BaseWrapper>
                     <Container text>
                         <Header as="h1"> Hello this is SkinIQ Web UI</Header>
                         <LoginForm
@@ -61,14 +60,14 @@ export const LoginRouter = schema(model)(React.createClass({
                             tokenCursor={this.props.tree.token}
                         />
                     </Container>
-                </BaseLayout>
+                </BaseWrapper>
             );
         }
         const privateKey = this.props.tree.token.data.doctor.data.privateKey.get();
 
         if (_.isEmpty(privateKey)) {
             return (
-                <BaseLayout>
+                <BaseWrapper>
                     <Grid>
                         <Grid.Row>
                             <Grid.Column width={16}>
@@ -95,7 +94,7 @@ export const LoginRouter = schema(model)(React.createClass({
                             <Grid.Column width={2} />
                         </Grid.Row>
                     </Grid>
-                </BaseLayout>
+                </BaseWrapper>
             );
         }
         return (

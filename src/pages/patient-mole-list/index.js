@@ -57,7 +57,7 @@ const PatientMoleList = schema(model)(React.createClass({
                                 (
                                     <div><Label color="red" basic>
                                         Diagnose Required for {mole.data.imagesWithDiagnoseRequired}/{mole.data.imagesCount} images
-                                    </Label><br /></div>
+                                    </Label><br /><br /></div>
                                 )
                                 :
                                 null
@@ -68,7 +68,7 @@ const PatientMoleList = schema(model)(React.createClass({
                                 (
                                     <div><Label color="red" basic>
                                         Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount} images
-                                    </Label><br /></div>
+                                    </Label><br /><br /></div>
                                 )
                                 :
                                 null

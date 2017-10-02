@@ -1,6 +1,10 @@
 import _ from 'lodash';
 import CryptoJS from 'crypto-js';
-import { buildGetService, buildPostService, defaultHeaders, wrapItemsAsRemoteData, hydrateImage } from './base';
+import {
+    buildGetService, buildPostService,
+    defaultHeaders, wrapItemsAsRemoteData,
+    convertListToDict,
+} from './base';
 import { encryptAES, encryptRSA, decryptAES, decryptRSA } from './keypair';
 
 function dehydrateConsent({ validConsent, ...item }) {
@@ -25,11 +29,10 @@ function dehydratePatientData(data) {
             dehydratedData[key] = decryptAES(value, aesKey);
         }
     });
+    if (dehydratedData.mrn === null) {
+        dehydratedData.mrn = '';
+    }
     return dehydratedData;
-}
-
-function convertListToDict(list) {
-    return _.keyBy(list, (patient) => patient.data.pk);
 }
 
 function dehydratePatients(patients) {

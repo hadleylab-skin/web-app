@@ -4,6 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Table, Grid, Header, Image, Button, Modal, Form, Label } from 'semantic-ui-react';
 import { GridWrapper, Input, Checkbox } from 'components';
+import { Link } from 'react-router-dom';
 import schema from 'libs/state';
 import { convertCmToIn, convertInToCm } from 'libs/misc';
 
@@ -70,9 +71,13 @@ const MoleImageList = schema(model)(React.createClass({
             const data = cursor.get('data');
             const service = this.context.services.updateMolePhotoService;
             const result = await service(this.props.patientId, this.props.moleId, id, cursor, data);
-            await this.props.updateParent();
             this.props.moleImagesCursor.data.images.select(id).data.info.set(result);
+            await this.props.updateParent();
         };
+    },
+
+    isLoading(id) {
+        return this.props.tree.mole.data.images.select(id).data.info.status.get() === 'Loading';
     },
 
     renderPhoto(photo) {
@@ -193,7 +198,7 @@ const MoleImageList = schema(model)(React.createClass({
                                     disabled={this.isButtonDiabled(image.data.pk)}
                                     onClick={this.save(image.data.pk)}
                                     color="pink"
-                                    loading={cursor.select(image.data.pk).image.data.info.status.get() === 'Loading'}
+                                    loading={this.isLoading(image.data.pk)}
                                 >
                                     Save
                                 </Button>
@@ -217,7 +222,7 @@ const MoleImageList = schema(model)(React.createClass({
         const images = this.props.tree.mole.data.images.get();
         const total = _.values(images).length;
         const requireAttention = this.props.tree.requireAttention.get();
-        const visibleImages = _.filter(images, (image)=> {
+        const visibleImages = _.filter(images, (image) => {
             if (requireAttention) {
                 const info = image.data.info.data;
                 return info.approved === false ||
@@ -232,8 +237,18 @@ const MoleImageList = schema(model)(React.createClass({
                 <Grid>
                     <Grid.Row />
                     <Grid.Row>
-                        <Grid.Column>
+                        {
+                            mole.data.patientAnatomicalSite
+                        ?
+                            <Grid.Column width={4}>
+                                <Image src={mole.data.patientAnatomicalSite.distantPhoto.thumbnail}/>
+                            </Grid.Column>
+                        :
+                            null
+                        }
+                        <Grid.Column width={8}>
                             <Header>Patient mole's images ({mole.data.anatomicalSite.data.name})</Header>
+                            <Link to={`/patient/${this.props.patientId}/moles`}>See all moles</Link>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>

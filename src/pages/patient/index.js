@@ -46,9 +46,8 @@ const patientValidationSchema = {
         },
         mrn: {
             type: 'string',
-            pattern: '^\\d+$',
+            pattern: '^\\d{0,9}$',
             message: 'MRN should be an integer number, less than 10 digits',
-            maxLength: 10,
         },
     },
     required: ['firstName', 'lastName'],
@@ -77,7 +76,7 @@ const Patient = schema({})(React.createClass({
 
     componentWillMount() {
         const patientCursor = this.props.patientCursor;
-        if (_.isEmpty(moleImagesCursor.get()) || moleImagesCursor.status.get() === 'Loading') {
+        if (_.isEmpty(patientCursor.get()) || patientCursor.status.get() === 'Loading') {
             patientCursor.on('update', this.setupAndUnsubscribe);
         } else {
             this.props.tree.set(patientCursor.get());
@@ -129,7 +128,7 @@ const Patient = schema({})(React.createClass({
         const patientCursor = this.props.tree.data;
         const status = this.props.patientCursor.status.get();
         const disabled = !status;
-        const loading = status === 'Loading';
+        const loading = status === 'Loading' || typeof status === 'undefined';
         const saved = this.props.tree.saved.get();
         const errors = this.props.tree.error.data.get() || {};
         const errorTexts = prepareErrorTexts(errors, titleMap);
@@ -245,7 +244,7 @@ const Patient = schema({})(React.createClass({
                             <Header as="p">
                                 Moles information
                             </Header>
-                            <PatientMolesInfo patient={patientCursor.get()} />
+                            {loading ? null : <PatientMolesInfo patient={this.props.patientCursor.data.get()} />}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
