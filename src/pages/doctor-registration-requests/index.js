@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import moment from 'moment';
 import BaobabPropTypes from 'baobab-prop-types';
 import { GridWrapper } from 'components';
 import schema from 'libs/state';
@@ -69,6 +70,7 @@ const DoctorResistrationRequests = schema(model)(React.createClass({
                 <Table celled>
                     <Table.Header>
                         <Table.Row>
+                            <Table.HeaderCell>Registration date</Table.HeaderCell>
                             <Table.HeaderCell>First Name</Table.HeaderCell>
                             <Table.HeaderCell>Last Name</Table.HeaderCell>
                             <Table.HeaderCell>Email</Table.HeaderCell>
@@ -81,6 +83,9 @@ const DoctorResistrationRequests = schema(model)(React.createClass({
                             <Table.Row
                                 key={pk}
                             >
+                                <Table.Cell>
+                                    {moment(request.data.dateCreated).format('MMM D, YYYY')}
+                                </Table.Cell>
                                 <Table.Cell>{request.data.firstName}</Table.Cell>
                                 <Table.Cell>{request.data.lastName}</Table.Cell>
                                 <Table.Cell>{request.data.email}</Table.Cell>
