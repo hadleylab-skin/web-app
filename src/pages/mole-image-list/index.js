@@ -114,7 +114,7 @@ const MoleImageList = schema(model)(React.createClass({
                         <Table.HeaderCell>Created</Table.HeaderCell>
                         <Table.HeaderCell>Age</Table.HeaderCell>
                         <Table.HeaderCell>Image</Table.HeaderCell>
-                        <Table.HeaderCell>Diagnoses</Table.HeaderCell>
+                        <Table.HeaderCell>Clinical diagnosis</Table.HeaderCell>
                         <Table.HeaderCell>Biopsy</Table.HeaderCell>
                         <Table.HeaderCell>Approved</Table.HeaderCell>
                         <Table.HeaderCell />
@@ -131,13 +131,7 @@ const MoleImageList = schema(model)(React.createClass({
                             <Table.Cell>
                                 <Form>
                                     <Form.Field>
-                                        <label>Pathalogical</label>
-                                        <Input
-                                            cursor={cursor.select(image.data.pk).data.info.data.pathDiagnosis}
-                                        />
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <label>Clinical</label>
+                                        <label>Clinical disagnosis</label>
                                         <Input
                                             cursor={cursor.select(image.data.pk).data.info.data.clinicalDiagnosis}
                                         />
@@ -152,6 +146,18 @@ const MoleImageList = schema(model)(React.createClass({
                                             cursor={cursor.select(image.data.pk).data.info.data.biopsy}
                                         />
                                     </Form.Field>
+                                    {
+                                    image.data.info.data.biopsy
+                                    ?
+                                        <Form.Field>
+                                            <label>Pathalogical disagnosis</label>
+                                            <Input
+                                                cursor={cursor.select(image.data.pk).data.info.data.pathDiagnosis}
+                                            />
+                                        </Form.Field>
+                                    :
+                                        null
+                                    }
                                     {
                                     image.data.info.data.biopsy
                                     ?

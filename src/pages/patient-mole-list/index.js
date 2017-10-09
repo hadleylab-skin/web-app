@@ -37,6 +37,50 @@ const PatientMoleList = schema(model)(React.createClass({
         }),
     },
 
+    renderMolesInfo(mole) {
+        return (
+            <Grid.Column width={10}>
+                {
+                    mole.data.imagesWithClinicalDiagnosisRequired
+                    ?
+                    (
+                        <div><Label color="red" basic>
+                            Clinical Diagnose Required for {mole.data.imagesWithClinicalDiagnosisRequired}/{mole.data.imagesCount} images
+                        </Label><br /><br /></div>
+                    )
+                    :
+                    null
+                }
+                {
+                    mole.data.imagesWithPathologicalDiagnosisRequired
+                    ?
+                    (
+                        <div><Label color="red" basic>
+                            Pathological Diagnose Required for {mole.data.imagesWithPathologicalDiagnosisRequired}/{mole.data.imagesBiopsyCount} images
+                        </Label><br /><br /></div>
+                    )
+                    :
+                    null
+                }
+
+                {
+                    mole.data.imagesApproveRequired
+                    ?
+                    (
+                        <div><Label color="red" basic>
+                            Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount} images
+                        </Label><br /><br /></div>
+                    )
+                    :
+                    null
+                }
+                <Label basic>
+                    Total: {mole.data.imagesCount} images
+                </Label>
+            </Grid.Column>
+        );
+    },
+
     renderPhoto(mole) {
         const photo = mole.data.lastImage.photo.thumbnail;
         if (_.isEmpty(photo)) {
@@ -50,33 +94,7 @@ const PatientMoleList = schema(model)(React.createClass({
                         <Grid.Column width={6}>
                             <Image src={photo} size="tiny" />
                         </Grid.Column>
-                        <Grid.Column width={10}>
-                            {
-                                mole.data.imagesWithDiagnoseRequired
-                                ?
-                                (
-                                    <div><Label color="red" basic>
-                                        Diagnose Required for {mole.data.imagesWithDiagnoseRequired}/{mole.data.imagesCount} images
-                                    </Label><br /><br /></div>
-                                )
-                                :
-                                null
-                            }
-                            {
-                                mole.data.imagesApproveRequired
-                                ?
-                                (
-                                    <div><Label color="red" basic>
-                                        Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount} images
-                                    </Label><br /><br /></div>
-                                )
-                                :
-                                null
-                            }
-                            <Label basic>
-                                Total: {mole.data.imagesCount} images
-                            </Label>
-                        </Grid.Column>
+                        {this.renderMolesInfo(mole)}
                     </Grid.Row>
                 </Grid>
             </Link>
@@ -148,7 +166,8 @@ const PatientMoleList = schema(model)(React.createClass({
         const visibleMoles = _.filter(moles.data, (mole) => {
             if (requireAttention &&
                 mole.data.imagesApproveRequired === 0 &&
-                mole.data.imagesWithDiagnoseRequired === 0) {
+                mole.data.imagesWithClinicalDiagnosisRequired === 0 &&
+                mole.data.imagesWithPathologicalDiagnosisRequired === 0) {
                 return false;
             }
             if (selectedAnatomicalSite) {

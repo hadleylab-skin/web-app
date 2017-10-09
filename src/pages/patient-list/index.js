@@ -117,8 +117,9 @@ const PatientList = schema(model)(React.createClass({
         const visiblePatients = _.filter(patients.data, (patient) => {
             const search = _.toLower(this.props.tree.search.get());
             if (requireAttention &&
-                patient.data.moleImagesApproveRequired === 0 &&
-                patient.data.moleImagesWithDiagnoseRequired === 0) {
+                patient.data.molesImagesApproveRequired === 0 &&
+                patient.data.molesImagesWithClinicalDiagnosisRequired === 0 &&
+                patient.data.molesImagesWithPathologicalDiagnosisRequired === 0) {
                 return false;
             }
             return _.isEmpty(search) ||
