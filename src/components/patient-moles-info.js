@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import { Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
@@ -14,28 +13,39 @@ export function PatientMolesInfo({ patient }) {
     return (
         <Link to={`/patient/${patient.pk}/moles`}>
             {
-                patient.moleImagesWithDiagnoseRequired
+                patient.molesImagesWithClinicalDiagnosisRequired
                 ?
                 (
                     <div><Label color="red" basic>
-                        Diagnose Required for {patient.moleImagesWithDiagnoseRequired}/{patient.molesImagesCount} images
+                        Clinical Diagnose Required for {patient.molesImagesWithClinicalDiagnosisRequired}/{patient.molesImagesCount} images
                     </Label><br /><br /></div>
                 )
                 : null
             }
             {
-                patient.moleImagesApproveRequired
+                patient.molesImagesWithPathologicalDiagnosisRequired
                 ?
                 (
                     <div><Label color="red" basic>
-                        Approve required for {patient.moleImagesApproveRequired}/{patient.molesImagesCount} images
+                        Pathological Diagnose Required for {patient.molesImagesWithPathologicalDiagnosisRequired}/{patient.molesImagesBiopsyCount} images
                     </Label><br /><br /></div>
                 )
                 :
                 null
             }
-                <Label basic>
-                    Total: {patient.molesCount} moles
-                </Label>
+            {
+                patient.molesImagesApproveRequired
+                ?
+                (
+                    <div><Label color="red" basic>
+                        Approve required for {patient.molesImagesApproveRequired}/{patient.molesImagesCount} images
+                    </Label><br /><br /></div>
+                )
+                :
+                null
+            }
+            <Label basic>
+                Total: {patient.molesCount} moles
+            </Label>
         </Link>);
 }
