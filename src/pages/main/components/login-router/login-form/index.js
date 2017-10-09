@@ -2,8 +2,9 @@ import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import schema from 'libs/state';
-import { Button, Form, Input, Icon } from 'semantic-ui-react';
-import { FormErrorMessages, prepareErrorTexts } from 'components';
+import { Button, Form, Icon } from 'semantic-ui-react';
+import autofill from 'react-autofill';
+import { FormErrorMessages, prepareErrorTexts, Input } from 'components';
 import { loginService } from 'services/auth';
 
 const model = {
@@ -52,12 +53,10 @@ export const LoginForm = schema(model)(React.createClass({
                         iconPosition="left"
                         placeholder="Email"
                         error={!!errors.username}
+                        cursor={usernameCursor}
                     >
                         <Icon name="mail outline" />
-                        <input
-                            value={usernameCursor.get()}
-                            onChange={(e) => usernameCursor.set(e.target.value)}
-                        />
+                        <input />
                     </Input>
                 </Form.Field>
                 <Form.Field>
@@ -65,14 +64,13 @@ export const LoginForm = schema(model)(React.createClass({
                     <Input
                         iconPosition="left"
                         placeholder="Password"
+                        type="password"
+                        cursor={passwordCursor}
                         error={!!errors.password}
+                        autoFocus
                     >
                         <Icon name="lock" />
-                        <input
-                            type="password"
-                            value={passwordCursor.get()}
-                            onChange={(e) => passwordCursor.set(e.target.value)}
-                        />
+                        <input />
                     </Input>
                 </Form.Field>
                 <Button
