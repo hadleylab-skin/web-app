@@ -3,7 +3,6 @@ import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import schema from 'libs/state';
 import { Button, Form, Icon } from 'semantic-ui-react';
-import autofill from 'react-autofill';
 import { FormErrorMessages, prepareErrorTexts, Input } from 'components';
 import { loginService } from 'services/auth';
 
