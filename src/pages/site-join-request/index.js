@@ -70,6 +70,7 @@ const SiteJoinRequest = schema(model)(React.createClass({
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Registration date</Table.HeaderCell>
+                            <Table.HeaderCell>Join request date</Table.HeaderCell>
                             <Table.HeaderCell>First Name</Table.HeaderCell>
                             <Table.HeaderCell>Last Name</Table.HeaderCell>
                             <Table.HeaderCell>Email</Table.HeaderCell>
@@ -83,6 +84,9 @@ const SiteJoinRequest = schema(model)(React.createClass({
                             >
                                 <Table.Cell>
                                     {moment(request.data.doctor.dateCreated).format('MMM D, YYYY')}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {moment(request.data.dateCreated).format('MMM D, YYYY')}
                                 </Table.Cell>
                                 <Table.Cell>{request.data.doctor.firstName}</Table.Cell>
                                 <Table.Cell>{request.data.doctor.lastName}</Table.Cell>
@@ -136,7 +140,7 @@ const SiteJoinRequest = schema(model)(React.createClass({
                     <Grid.Row />
                     <Grid.Row>
                         <Grid.Column>
-                            <Header>Doctors Registration Requests</Header>
+                            <Header>Site join requests</Header>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
