@@ -5,7 +5,7 @@ import {
     Route,
 } from 'react-router-dom';
 import { DoctorPage,
-         DoctorResistrationRequestsPage,
+         SiteJoinRequestPage,
          PatientListPage,
          PatientPage,
          PatientMoleListPage,
@@ -128,9 +128,9 @@ export const AppRouter = schema(model)(React.createClass({
                     ?
                         <Route
                             exact
-                            path="/doctor-registration-requests"
+                            path="/site-join-requests"
                             render={() => (
-                                <DoctorResistrationRequestsPage
+                                <SiteJoinRequestPage
                                     tree={registrationRequestsScreenCursor}
                                 />
                             )}

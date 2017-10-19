@@ -36,7 +36,7 @@ export function updateDoctorService({ token }) {
     };
 }
 
-export function getDoctorResistrationRequestsService({ token }) {
+export function getSiteJoinRequestsService({ token }) {
     const headers = {
         Authorization: `JWT ${token}`,
     };
@@ -51,7 +51,7 @@ export function getDoctorResistrationRequestsService({ token }) {
     };
 }
 
-export function handleDoctorRegistrationRequestService({ token }) {
+export function handleSiteJoinRequestService({ token }) {
     const headers = {
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
