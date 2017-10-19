@@ -43,7 +43,7 @@ export function getDoctorResistrationRequestsService({ token }) {
 
     return (cursor) => {
         const _service = buildGetService(
-            '/api/v1/doctors_registration_requests/',
+            '/api/v1/site_join_requests/?state=0',
             _.flow([wrapItemsAsRemoteData, convertListToDict]),
             _.merge({}, defaultHeaders, headers));
 
@@ -58,25 +58,15 @@ export function handleDoctorRegistrationRequestService({ token }) {
     };
 
     return (cursor, doctorPk, action) => {
-        let method = '';
-        let data = {};
-        switch (action) {
-        case 'approve':
-            method = 'PATCH';
-            data = { approvedByCoordinator: true };
-            break;
-        case 'reject':
-            method = 'DELETE';
-            break;
-        default:
+        if (action !== 'approve' && action !== 'reject') {
             throw { error: "Wrong action it should be 'approve' or 'reject'" };
         }
-        const service = buildPostService(`/api/v1/doctors_registration_requests/${doctorPk}/`,
-                                         method,
+        const service = buildPostService(`/api/v1/site_join_requests/${doctorPk}/${action}/`,
+                                         'POST',
                                          JSON.stringify,
                                          _.identity,
                                          _.merge({}, defaultHeaders, headers));
-        return service(cursor, data);
+        return service(cursor, {});
     };
 }
 

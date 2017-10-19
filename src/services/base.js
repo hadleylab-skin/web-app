@@ -61,7 +61,7 @@ export function buildPostService(path,
             if (response.status === 204) {
                 result = {
                     status: 'Succeed',
-                    data: cursor.get(),
+                    data: cursor.data.get(),
                 };
             } else if (response.status >= 400) {
                 respData = await response.json();

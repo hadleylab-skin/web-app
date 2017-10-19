@@ -4,7 +4,7 @@ import moment from 'moment';
 import BaobabPropTypes from 'baobab-prop-types';
 import { GridWrapper } from 'components';
 import schema from 'libs/state';
-import { Grid, Header, Table, Label, Button, Message } from 'semantic-ui-react';
+import { Grid, Header, Table, Button, Message } from 'semantic-ui-react';
 
 export const DoctorResistrationRequestsPage = React.createClass({
     // We need this wrapper to make hot module replacement work
@@ -74,7 +74,6 @@ const DoctorResistrationRequests = schema(model)(React.createClass({
                             <Table.HeaderCell>First Name</Table.HeaderCell>
                             <Table.HeaderCell>Last Name</Table.HeaderCell>
                             <Table.HeaderCell>Email</Table.HeaderCell>
-                            <Table.HeaderCell>Email Is Confirmed</Table.HeaderCell>
                             <Table.HeaderCell>Actions</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -84,20 +83,11 @@ const DoctorResistrationRequests = schema(model)(React.createClass({
                                 key={pk}
                             >
                                 <Table.Cell>
-                                    {moment(request.data.dateCreated).format('MMM D, YYYY')}
+                                    {moment(request.data.doctor.dateCreated).format('MMM D, YYYY')}
                                 </Table.Cell>
-                                <Table.Cell>{request.data.firstName}</Table.Cell>
-                                <Table.Cell>{request.data.lastName}</Table.Cell>
-                                <Table.Cell>{request.data.email}</Table.Cell>
-                                <Table.Cell>
-                                    {
-                                    request.data.isActive
-                                    ?
-                                        <Label color="green">Yes</Label>
-                                    :
-                                        <Label color="red">No</Label>
-                                    }
-                                </Table.Cell>
+                                <Table.Cell>{request.data.doctor.firstName}</Table.Cell>
+                                <Table.Cell>{request.data.doctor.lastName}</Table.Cell>
+                                <Table.Cell>{request.data.doctor.email}</Table.Cell>
                                 <Table.Cell>
                                     {
                                     request.message
