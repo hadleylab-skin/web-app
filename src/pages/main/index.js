@@ -8,12 +8,17 @@ import {
 import { LoginRouter } from './components/login-router';
 import { ActivatePage } from './components/activate';
 import { PasswordResetPage } from './components/password-reset';
+import { HowToShare } from './components/how-to-share';
 
 export const MainPage = React.createClass({
     render() {
         return (
             <HashRouter>
                 <Switch>
+                    <Route
+                        path="/how-to-share-private-key"
+                        component={HowToShare}
+                    />
                     <Route
                         path="/activate/:uid/:token"
                         render={(props) => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Menu } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 export const BaseWrapper = React.createClass({
     render() {
@@ -10,7 +11,9 @@ export const BaseWrapper = React.createClass({
                         name='Home'
                         active={false}
                     >
-                        Home
+                        <Link to='/'>
+                            Home
+                        </Link>
                     </Menu.Item>
                 </Menu>
                 {this.props.children}

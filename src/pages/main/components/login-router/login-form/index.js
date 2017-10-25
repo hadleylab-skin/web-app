@@ -5,6 +5,7 @@ import schema from 'libs/state';
 import { Button, Form, Icon } from 'semantic-ui-react';
 import { FormErrorMessages, prepareErrorTexts, Input } from 'components';
 import { loginService } from 'services/auth';
+import { withRouter } from 'react-router';
 
 const model = {
     tree: {
@@ -24,16 +25,25 @@ function titleMap(title) {
     }
 }
 
-export const LoginForm = schema(model)(React.createClass({
+export const LoginForm = schema(model)(withRouter(React.createClass({
     propTypes: {
         tree: BaobabPropTypes.cursor.isRequired,
         tokenCursor: BaobabPropTypes.cursor.isRequired,
+        history: React.PropTypes.object.isRequired,
     },
 
-    submit() {
-        loginService(
+    async submit() {
+        let result = await loginService(
             this.props.tokenCursor,
             this.props.tree.get());
+        if (result.status === 'Succeed') {
+            const privateKey = result.data.doctor.data.privateKey;
+            if (_.isEmpty(privateKey)) {
+                this.props.history.push('/how-to-share-private-key');
+                this.props.tokenCursor.set({});
+                this.props.tree.set(model);
+            }
+        }
     },
 
     render() {
@@ -82,4 +92,4 @@ export const LoginForm = schema(model)(React.createClass({
             </Form>
         );
     },
-}));
+})));
