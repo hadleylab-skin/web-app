@@ -51,7 +51,9 @@ export const LoginRouter = schema(model)(React.createClass({
             return (
                 <BaseWrapper>
                     <Container text>
-                        <Header as="h1"> Hello this is SkinIQ Web UI</Header>
+                        <Header as="h1">
+                            Melanoma Detection Web UI
+                        </Header>
                         <LoginForm
                             tree={this.props.tree.loginPage}
                             tokenCursor={this.props.tree.token}
