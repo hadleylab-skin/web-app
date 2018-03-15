@@ -19,6 +19,7 @@ import { patientsService,
          updatePatientService,
          updatePatientConsentService,
        } from './patients';
+import { getStudiesService } from './study';
 
 
 export default {
@@ -40,4 +41,5 @@ export default {
     createPatientService,
     updatePatientService,
     updatePatientConsentService,
+    getStudiesService,
 };

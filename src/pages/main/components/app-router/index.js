@@ -10,6 +10,7 @@ import { DoctorPage,
          PatientPage,
          PatientMoleListPage,
          MoleImagesListPage,
+         StudyListPage
 } from 'pages';
 import schema from 'libs/state';
 import { InnerLayout } from './layout';
@@ -19,6 +20,8 @@ const model = (props, context) => ({
         patients: context.services.patientsService,
         patientsMoles: {},
         molesImages: {},
+
+        studies: context.services.getStudiesService,
 
         patientMolesScreen: {},
         patientScreen: {},
@@ -39,6 +42,7 @@ export const AppRouter = schema(model)(React.createClass({
         }),
         services: React.PropTypes.shape({
             patientsService: React.PropTypes.func.isRequired,
+            getStudiesService: React.PropTypes.func.isRequired,
             getPatientMolesService: React.PropTypes.func.isRequired,
         }),
     },
@@ -52,6 +56,8 @@ export const AppRouter = schema(model)(React.createClass({
         const patientScreenCursor = this.props.tree.patientScreenCursor;
         const patientMolesScreenCursor = this.props.tree.patientMolesScreen;
         const registrationRequestsScreenCursor = this.props.tree.registrationRequestsScreen;
+        const studiesCursor = this.props.tree.studies;
+
         return (
             <HashRouter>
                 <InnerLayout
@@ -144,9 +150,17 @@ export const AppRouter = schema(model)(React.createClass({
                         path="/doctor-info"
                         component={DoctorPage}
                     />
+                    <Route
+                        exact
+                        path="/studies"
+                        render={() => (
+                            <StudyListPage
+                                tree={studiesCursor}
+                            />
+                        )}
+                    />
                 </InnerLayout>
             </HashRouter>
         );
     },
 }));
-
