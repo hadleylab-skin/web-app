@@ -6,3 +6,4 @@ export { PatientMoleListPage } from './patient-mole-list';
 export { MoleImagesListPage } from './mole-image-list';
 export { SiteJoinRequestPage } from './site-join-request';
 export { StudyListPage } from './study-list';
+export { StudyAddPage } from './study-add';

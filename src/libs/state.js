@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Baobab from 'baobab';
 import _ from 'lodash';
 
+
 function compareProps(oldProps, newProps) {
     const oldKeys = _.keys(oldProps);
     const newKeys = _.keys(newProps);

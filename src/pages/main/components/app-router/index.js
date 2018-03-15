@@ -10,7 +10,8 @@ import { DoctorPage,
          PatientPage,
          PatientMoleListPage,
          MoleImagesListPage,
-         StudyListPage
+         StudyListPage,
+         StudyAddPage,
 } from 'pages';
 import schema from 'libs/state';
 import { InnerLayout } from './layout';
@@ -27,6 +28,7 @@ const model = (props, context) => ({
         patientScreen: {},
         registrationRequestsScreen: {},
         moleScreen: {},
+        studyAddScreen: {},
     },
 });
 
@@ -156,6 +158,15 @@ export const AppRouter = schema(model)(React.createClass({
                         render={() => (
                             <StudyListPage
                                 tree={studiesCursor}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact
+                        path="/studies/add/"
+                        render={() => (
+                            <StudyAddPage
+                                tree={this.props.tree.studyAddScreen}
                             />
                         )}
                     />

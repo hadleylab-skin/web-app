@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
-import { Table, Grid, Header } from 'semantic-ui-react';
+import { Table, Grid, Header, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import { GridWrapper, Input } from 'components';
 import schema from 'libs/state';
 
@@ -80,6 +81,18 @@ const StudyList = schema(model)(React.createClass({
                                 {/*placeholder="Search..."*/}
                                 {/*cursor={this.props.tree.search}*/}
                             {/*/>*/}
+                        </Grid.Column>
+                        <Grid.Column width={12}>
+                            <div style={{textAlign: 'right'}}>
+                                <Link to="/studies/add/">
+                                    <Button
+                                        type="button"
+                                        color="green"
+                                    >
+                                        Start a new study
+                                    </Button>
+                                </Link>
+                            </div>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>

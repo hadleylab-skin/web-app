@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { buildGetService, defaultHeaders } from './base';
+import { buildGetService, buildPostService, defaultHeaders } from './base';
 
 
 function dehydrateStudies(items) {
@@ -19,4 +19,22 @@ export function getStudiesService({ token }) {
 
         return _service(cursor);
     };
+}
+
+function hydrateStudyData(data) {
+    return JSON.stringify(data);
+}
+
+
+export function addStudyService({ token }) {
+    const headers = {
+        Authorization: `JWT ${token}`,
+    };
+
+    return buildPostService(
+        '/api/v1/study/',
+        'POST',
+        hydrateStudyData,
+        _.identity,
+         _.merge({}, defaultHeaders, headers));
 }
