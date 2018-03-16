@@ -11,6 +11,7 @@ const model = {
     tree: {
         data: [],
         status: '',
+        search: '',
     },
 };
 
@@ -30,7 +31,6 @@ const StudyList = schema(model)(React.createClass({
 
     renderTable() {
         const status = this.props.tree.status.get();
-
         if (status !== 'Succeed') {
             return (
                 <div>Loading...</div>
@@ -38,6 +38,12 @@ const StudyList = schema(model)(React.createClass({
         }
 
         const studies = this.props.tree.data.get();
+        const filteredStudies = _.filter(studies, (study) => {
+            const search = _.toLower(this.props.tree.search.get());
+            return _.isEmpty(search) ||
+                _.includes(_.toLower(study.title), search) ||
+                _.includes(_.toString(study.pk), search);
+        });
 
         return (
             <Table celled>
@@ -48,7 +54,7 @@ const StudyList = schema(model)(React.createClass({
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {_.map(studies, (study) => (
+                    {_.map(filteredStudies, (study) => (
                         <Table.Row key={study.pk}>
                             <Table.Cell>
                                 {study.pk}
@@ -75,12 +81,12 @@ const StudyList = schema(model)(React.createClass({
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column width={4}>
-                            {/*<Input*/}
-                                {/*fluid*/}
-                                {/*icon="search"*/}
-                                {/*placeholder="Search..."*/}
-                                {/*cursor={this.props.tree.search}*/}
-                            {/*/>*/}
+                            <Input
+                                fluid
+                                icon="search"
+                                placeholder="Search..."
+                                cursor={this.props.tree.search}
+                            />
                         </Grid.Column>
                         <Grid.Column width={12}>
                             <div style={{textAlign: 'right'}}>

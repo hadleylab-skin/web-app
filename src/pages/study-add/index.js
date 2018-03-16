@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import { withRouter } from 'react-router';
 import BaobabPropTypes from 'baobab-prop-types';
 import { Table, Grid, Header, Button, Form, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -23,9 +24,11 @@ export const StudyAddPage = React.createClass({
 });
 
 
-const StudyAdd = schema(model)(React.createClass({
+const StudyAdd = schema(model)(withRouter(React.createClass({
     propTypes: {
-        tree: BaobabPropTypes.cursor.isRequired
+        tree: BaobabPropTypes.cursor.isRequired,
+        studiesCursor: BaobabPropTypes.cursor.isRequired,
+        history: React.PropTypes.object.isRequired,
     },
 
     contextTypes: {
@@ -41,7 +44,11 @@ const StudyAdd = schema(model)(React.createClass({
 
         const result = await this.context.services.addStudyService(
             this.props.tree.addStudyResult, {title, consentDocs});
-        console.log(result);
+        if (result.status === 'Succeed') {
+            this.props.studiesCursor.data.unshift(result.data);
+            // this.props.studies.get('data').push(result.data); or .apply
+            this.props.history.push('/studies/');
+        }
     },
 
     render() {
@@ -94,4 +101,4 @@ const StudyAdd = schema(model)(React.createClass({
             </GridWrapper>
         );
     },
-}));
+})));

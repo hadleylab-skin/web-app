@@ -167,6 +167,7 @@ export const AppRouter = schema(model)(React.createClass({
                         render={() => (
                             <StudyAddPage
                                 tree={this.props.tree.studyAddScreen}
+                                studiesCursor={studiesCursor}
                             />
                         )}
                     />
