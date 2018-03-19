@@ -41,11 +41,13 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
     async submit() {
         const title = this.props.tree.title.get();
         const consentDocs = this.props.tree.consentDocs.get();
-        this.props.tree.titleError.set('');
 
         const result = await this.context.services.addStudyService(
             this.props.tree.addStudyResult, {title, consentDocs});
         if (result.status === 'Succeed') {
+            this.props.tree.title.set('');
+            this.props.tree.consentDocs.set([]);
+
             this.props.studiesCursor.data.unshift(result.data);
             this.props.history.push(`/studies/${result.data.pk}`);
         }

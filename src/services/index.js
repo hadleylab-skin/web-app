@@ -20,7 +20,8 @@ import { patientsService,
          updatePatientConsentService,
        } from './patients';
 import { getStudiesService,
-         addStudyService
+         addStudyService,
+         addDoctorToStudyService
        } from './study';
 import { addConsentDocService } from './consent-doc';
 
@@ -47,4 +48,5 @@ export default {
     getStudiesService,
     addConsentDocService,
     addStudyService,
+    addDoctorToStudyService,
 };

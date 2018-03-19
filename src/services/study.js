@@ -36,5 +36,19 @@ export function addStudyService({ token }) {
         'POST',
         hydrateStudyData,
         _.identity,
-         _.merge({}, defaultHeaders, headers));
+        _.merge({}, defaultHeaders, headers));
+}
+
+
+export function addDoctorToStudyService({ token }) {
+    const headers = {
+        Authorization: `JWT ${token}`,
+    };
+
+    return buildPostService(
+        '/api/v1/study/add_doctor/',
+        'POST',
+        hydrateStudyData,
+        _.identity,
+        _.merge({}, defaultHeaders, headers));
 }

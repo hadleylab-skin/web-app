@@ -35,10 +35,13 @@ const StudyDetail = schema({})(React.createClass({
 
     renderConsentDocs(consentDocs) {
         return _.map(consentDocs, (consentDoc, index) => (
-            <a key={index} href={consentDoc.file} target="_blank">
-                <img className={docStyles.upload_img}
-                    src={consentDoc.thumbnail ? consentDoc.thumbnail : docIcon}/>
-            </a>
+            <div key={index} className={docStyles.upload_row}>
+                <a href={consentDoc.file} target="_blank">
+                    <img className={docStyles.upload_row__img}
+                        src={consentDoc.thumbnail ? consentDoc.thumbnail : docIcon}/>
+                </a>
+                <span className={docStyles.upload_row__name}>{consentDoc.attachmentName}</span>
+            </div>
         ));
     },
 
@@ -84,17 +87,11 @@ const StudyDetail = schema({})(React.createClass({
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
-                        <Grid.Column>
+                        <Grid.Column width={10}>
                             {this.renderTable(study)}
                         </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row>
-                        <Grid.Column>
+                        <Grid.Column width={6}>
                             <Header>Add doctor to study</Header>
-                        </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row>
-                        <Grid.Column>
                             <AddToStudy />
                         </Grid.Column>
                     </Grid.Row>
