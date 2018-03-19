@@ -49,18 +49,22 @@ const StudyList = schema(model)(React.createClass({
             <Table celled>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>Study ID</Table.HeaderCell>
-                        <Table.HeaderCell>Title</Table.HeaderCell>
+                        <Table.HeaderCell style={{width: "20%"}}>Study ID</Table.HeaderCell>
+                        <Table.HeaderCell style={{width: "80%"}}>Title</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                     {_.map(filteredStudies, (study) => (
                         <Table.Row key={study.pk}>
-                            <Table.Cell>
-                                {study.pk}
+                            <Table.Cell style={{width: '20%'}}>
+                                <Link to={`/studies/${study.pk}`}>
+                                    {study.pk}
+                                </Link>
                             </Table.Cell>
-                            <Table.Cell>
-                                {study.title}
+                            <Table.Cell style={{width: '80%'}}>
+                                <Link to={`/studies/${study.pk}`}>
+                                    {study.title}
+                                </Link>
                             </Table.Cell>
                         </Table.Row>
                     ))}

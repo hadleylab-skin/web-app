@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import BaobabPropTypes from 'baobab-prop-types';
 import { Table, Grid, Header, Button, Form, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { GridWrapper, Input, FilesInput } from 'components';
+import { GridWrapper, Input, FilesInput, prepareErrorTexts, FormErrorMessages } from 'components';
 import schema from 'libs/state';
 
 
@@ -41,6 +41,7 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
     async submit() {
         const title = this.props.tree.title.get();
         const consentDocs = this.props.tree.consentDocs.get();
+        this.props.tree.titleError.set('');
 
         const result = await this.context.services.addStudyService(
             this.props.tree.addStudyResult, {title, consentDocs});
@@ -52,6 +53,16 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
     },
 
     render() {
+        const addStudyResult = this.props.tree.addStudyResult.get();
+
+        let titleError = false;
+        let errorTexts = {};
+        let errors = {};
+        if (addStudyResult && addStudyResult.status === 'Failure') {
+            errors = _.get(addStudyResult, 'error.data', {});
+            errorTexts = prepareErrorTexts(errors);
+        }
+
         return (
             <GridWrapper>
                 <Grid>
@@ -71,6 +82,7 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
                                     <Input
                                         iconPosition="left"
                                         placeholder="Title"
+                                        error={errors.title}
                                         cursor={this.props.tree.title}
                                     >
                                         <Icon name="font" />
@@ -94,6 +106,7 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
                                 >
                                     Submit
                                 </Button>
+                                <FormErrorMessages errorTexts={errorTexts} />
                             </Form>
                         </Grid.Column>
                     </Grid.Row>
