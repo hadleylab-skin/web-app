@@ -2,6 +2,7 @@ import { updateDoctorService,
          getDoctorService,
          getSiteJoinRequestsService,
          handleSiteJoinRequestService,
+         getDoctorListService,
        } from './doctor';
 import { getPatientMolesService,
          addMoleService,
@@ -29,6 +30,7 @@ import { addConsentDocService } from './consent-doc';
 export default {
     updateDoctorService,
     getDoctorService,
+    getDoctorListService,
     getSiteJoinRequestsService,
     handleSiteJoinRequestService,
     getPatientMolesService,

@@ -20,6 +20,7 @@ import { InnerLayout } from './layout';
 const model = (props, context) => ({
     tree: {
         patients: context.services.patientsService,
+        doctors: context.services.getDoctorListService,
         patientsMoles: {},
         molesImages: {},
 
@@ -48,12 +49,14 @@ export const AppRouter = schema(model)(React.createClass({
             patientsService: React.PropTypes.func.isRequired,
             getStudiesService: React.PropTypes.func.isRequired,
             getPatientMolesService: React.PropTypes.func.isRequired,
+            getDoctorListService: React.PropTypes.func.isRequired,
         }),
     },
 
     render() {
         const { isCoordinator } = this.context.cursors.doctor.data.get();
         const patientsCursor = this.props.tree.patients;
+        const doctorsCursor = this.props.tree.doctors;
         const patientsMolesCursor = this.props.tree.patientsMoles;
         const molesImagesCursor = this.props.tree.molesImages;
         const moleScreenCursor = this.props.tree.moleScreen;
@@ -172,6 +175,8 @@ export const AppRouter = schema(model)(React.createClass({
                             return study ? (
                                 <StudyDetailPage
                                     study={study}
+                                    tree={this.props.tree}
+                                    doctorsCursor={doctorsCursor}
                                 />
                             ) : null;
                         }}

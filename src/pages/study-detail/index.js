@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import BaobabPropTypes from 'baobab-prop-types';
 import { Table, Grid, Header, Button, Form, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { GridWrapper, Input } from 'components';
@@ -9,6 +10,13 @@ import docIcon from 'components/files-input/doc_icon.svg';
 import docStyles from 'components/files-input/styles.css'
 
 
+const model = {
+    tree: {
+        doctors: {},
+    },
+};
+
+
 export const StudyDetailPage = React.createClass({
     render() {
         return <StudyDetail {...this.props} />;
@@ -16,9 +24,10 @@ export const StudyDetailPage = React.createClass({
 });
 
 
-const StudyDetail = schema({})(React.createClass({
+const StudyDetail = schema(model)(React.createClass({
     propTypes: {
         study: React.PropTypes.object,
+        tree: BaobabPropTypes.cursor.isRequired,
     },
 
     renderDoctors(doctors) {
@@ -92,7 +101,9 @@ const StudyDetail = schema({})(React.createClass({
                         </Grid.Column>
                         <Grid.Column width={6}>
                             <Header>Add doctor to study</Header>
-                            <AddToStudy />
+                            <AddToStudy
+                                tree={this.props.tree}
+                            />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
