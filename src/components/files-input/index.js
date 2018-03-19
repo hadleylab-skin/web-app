@@ -2,6 +2,8 @@ import React from 'react';
 import _ from 'lodash';
 import BaobabPropTypes from 'baobab-prop-types';
 import { Input as InputUI, Button, Label } from 'semantic-ui-react';
+import s from './styles.css'
+import i from './doc_icon.svg'
 
 
 export const FilesInput = React.createClass({
@@ -17,15 +19,16 @@ export const FilesInput = React.createClass({
         };
     },
 
-    async handleOnChange(e) {
-        const file = e.target.files[0];
-        const { uploadedFiles, uploadPks } = this.state;
-        const result = await this.props.uploadService(this.props.cursor, file);
-        if (result.status === 'Succeed') {
-            uploadedFiles.push(file.name);
-            uploadPks.push(result.data.pk);
-            this.props.cursor.set(uploadPks);
-        }
+    handleOnChange(e) {
+        _.map(e.target.files, async (file) => {
+            const { uploadedFiles, uploadPks } = this.state;
+            const result = await this.props.uploadService(this.props.cursor, file);
+            if (result.status === 'Succeed') {
+                uploadedFiles.push(result.data);
+                uploadPks.push(result.data.pk);
+                this.props.cursor.set(uploadPks);
+            }
+        });
     },
 
     render() {
@@ -46,11 +49,13 @@ export const FilesInput = React.createClass({
                     />
                 </label>
                 {!_.isEmpty(uploadedFiles) ?
-                    <div>List of uploaded files:</div>
+                    <div className={s.uploads_label}>List of uploaded files:</div>
                 : null}
-                {_.map(uploadedFiles, (item, index) => (
-                    <div key={index}>{item}</div>
-                ))}
+                <div className={s.uploads_wrapper}>
+                    {_.map(uploadedFiles, (item, index) => (
+                        <img key={index} src={item.thumbnail ? item.thumbnail : i} className={s.upload_img}/>
+                    ))}
+                </div>
             </div>
         );
     },

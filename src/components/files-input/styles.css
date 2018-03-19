@@ -1,0 +1,11 @@
+.uploads_wrapper {}
+
+.uploads_label {
+    margin: 10px 0;
+}
+
+.upload_img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+}

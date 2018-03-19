@@ -2,9 +2,11 @@ import _ from 'lodash';
 import React from 'react';
 import { Table, Grid, Header, Button, Form, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { GridWrapper, Input, FilesInput } from 'components';
+import { GridWrapper, Input } from 'components';
+import { AddToStudy } from './add-to-study';
 import schema from 'libs/state';
-
+import docIcon from 'components/files-input/doc_icon.svg';
+import docStyles from 'components/files-input/styles.css'
 
 
 export const StudyDetailPage = React.createClass({
@@ -33,11 +35,10 @@ const StudyDetail = schema({})(React.createClass({
 
     renderConsentDocs(consentDocs) {
         return _.map(consentDocs, (consentDoc, index) => (
-            <div key={index}>
-                <a href={consentDoc.file} target="_blank">
-                    {consentDoc.file}
-                </a>
-            </div>
+            <a key={index} href={consentDoc.file} target="_blank">
+                <img className={docStyles.upload_img}
+                    src={consentDoc.thumbnail ? consentDoc.thumbnail : docIcon}/>
+            </a>
         ));
     },
 
@@ -57,10 +58,10 @@ const StudyDetail = schema({})(React.createClass({
                         ['Consent docs', this.renderConsentDocs(study.consentDocs)],
                     ], (row, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell>
+                            <Table.Cell style={{width: '20%'}}>
                                 {row[0]}
                             </Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell style={{width: '80%'}}>
                                 {row[1]}
                             </Table.Cell>
                         </Table.Row>
@@ -72,7 +73,6 @@ const StudyDetail = schema({})(React.createClass({
 
     render() {
         const { study } = this.props;
-        console.log(study);
 
         return (
             <GridWrapper>
@@ -84,8 +84,18 @@ const StudyDetail = schema({})(React.createClass({
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
-                        <Grid.Column width={8}>
+                        <Grid.Column>
                             {this.renderTable(study)}
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Header>Add doctor to study</Header>
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <AddToStudy />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

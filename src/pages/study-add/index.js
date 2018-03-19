@@ -47,8 +47,7 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
             this.props.tree.addStudyResult, {title, consentDocs});
         if (result.status === 'Succeed') {
             this.props.studiesCursor.data.unshift(result.data);
-            // this.props.studies.get('data').push(result.data); or .apply
-            this.props.history.push('/studies/');
+            this.props.history.push(`/studies/${result.data.pk}`);
         }
     },
 
@@ -56,7 +55,7 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
         const addStudyResult = this.props.tree.addStudyResult.get();
 
         let titleError = false;
-        let errorTexts = {};
+        let errorTexts = [];
         let errors = {};
         if (addStudyResult && addStudyResult.status === 'Failure') {
             errors = _.get(addStudyResult, 'error.data', {});
