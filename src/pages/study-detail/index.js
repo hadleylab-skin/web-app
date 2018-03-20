@@ -91,17 +91,14 @@ const StudyDetail = schema(model)(React.createClass({
                 <Grid>
                     <Grid.Row />
                     <Grid.Row>
-                        <Grid.Column>
-                            <Header>Study Detail</Header>
-                        </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row>
                         <Grid.Column width={10}>
+                            <Header>Study Detail</Header>
                             {this.renderTable(study)}
                         </Grid.Column>
                         <Grid.Column width={6}>
                             <Header>Add doctor to study</Header>
                             <AddToStudy
+                                study={study}
                                 tree={this.props.tree}
                             />
                         </Grid.Column>

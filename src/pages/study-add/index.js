@@ -56,7 +56,6 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
     render() {
         const addStudyResult = this.props.tree.addStudyResult.get();
 
-        let titleError = false;
         let errorTexts = [];
         let errors = {};
         if (addStudyResult && addStudyResult.status === 'Failure') {
