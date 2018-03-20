@@ -49,7 +49,7 @@ const StudyDetail = schema(model)(React.createClass({
                     <img className={docStyles.upload_row__img}
                         src={consentDoc.thumbnail ? consentDoc.thumbnail : docIcon}/>
                 </a>
-                <span className={docStyles.upload_row__name}>{consentDoc.attachmentName}</span>
+                <span className={docStyles.upload_row__name}>{consentDoc.originalFilename}</span>
             </div>
         ));
     },
