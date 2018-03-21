@@ -63,7 +63,7 @@ const PatientList = schema(model)(React.createClass({
         return _.map(studies, (study) => (
             <div key={study.pk}>
                 <Link to={`/studies/${study.pk}`}>
-                    {study.title}
+                    {study.title} [{study.pk}]
                 </Link>
             </div>
         ));
@@ -134,10 +134,20 @@ const PatientList = schema(model)(React.createClass({
                 patient.data.molesImagesWithPathologicalDiagnosisRequired === 0) {
                 return false;
             }
+
+            let matchByStudies = false;
+            patient.data.studies.forEach((study) => {
+                if (_.includes(_.toLower(study.title), search) ||
+                    _.includes(_.toString(study.pk), search)) {
+                    matchByStudies = true;
+                }
+            });
+
             return _.isEmpty(search) ||
                 _.includes(_.toLower(patient.data.mrn), search) ||
                 _.includes(_.toLower(patient.data.firstName), search) ||
-                _.includes(_.toLower(patient.data.lastName), search);
+                _.includes(_.toLower(patient.data.lastName), search) ||
+                matchByStudies;
         });
 
         return (

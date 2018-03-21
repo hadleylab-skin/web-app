@@ -3,6 +3,7 @@ import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import tv4 from 'tv4';
+import { Link } from 'react-router-dom';
 import { GridWrapper, Input,
          DatePicker, Select,
          FormErrorMessages, prepareErrorTexts,
@@ -132,6 +133,7 @@ const Patient = schema({})(React.createClass({
         const saved = this.props.tree.saved.get();
         const errors = this.props.tree.error.data.get() || {};
         const errorTexts = prepareErrorTexts(errors, titleMap);
+        const studies = patientCursor.studies.get();
 
         return (
             <GridWrapper>
@@ -245,6 +247,18 @@ const Patient = schema({})(React.createClass({
                                 Moles information
                             </Header>
                             {loading ? null : <PatientMolesInfo patient={this.props.patientCursor.data.get()} />}
+                        </Grid.Column>
+                        <Grid.Column width={3}>
+                            <Header as="p">
+                                Studies
+                            </Header>
+                            {_.map(studies, (study) => (
+                                <div key={study.pk}>
+                                    <Link to={`/studies/${study.pk}`}>
+                                        {study.title} [{study.pk}]
+                                    </Link>
+                                </div>
+                            ))}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
