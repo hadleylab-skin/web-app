@@ -59,6 +59,16 @@ const PatientList = schema(model)(React.createClass({
         }
     },
 
+    renderStudies(studies) {
+        return _.map(studies, (study) => (
+            <div key={study.pk}>
+                <Link to={`/studies/${study.pk}`}>
+                    {study.title}
+                </Link>
+            </div>
+        ));
+    },
+
     renderRace(race) {
         return this.context.mapRace(race);
     },
@@ -74,6 +84,7 @@ const PatientList = schema(model)(React.createClass({
                         <Table.HeaderCell>Race</Table.HeaderCell>
                         <Table.HeaderCell>Moles information</Table.HeaderCell>
                         <Table.HeaderCell>Consent</Table.HeaderCell>
+                        <Table.HeaderCell>Studies</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -89,7 +100,8 @@ const PatientList = schema(model)(React.createClass({
                                     this.renderSex(patient.data.sex),
                                     this.renderRace(patient.data.race),
                                     (<PatientMolesInfo patient={patient.data} />),
-                                    (<Consent noPhoto consent={patient.data.validConsent} />)],
+                                    (<Consent noPhoto consent={patient.data.validConsent} />),
+                                    this.renderStudies(patient.data.studies)],
                                 (data, index) => (
                                     <Table.Cell key={`${patient.data.pk}-${index}`}>
                                         {data}
