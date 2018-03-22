@@ -17,6 +17,7 @@ const model = {
 function titleMap(title) {
     switch (title) {
         case 0:
+        case 'doctorPk':
             return 'doctor';
         default:
             return `${_.capitalize(title)}:`;
@@ -40,7 +41,7 @@ export const AddToStudy = schema(model)(React.createClass({
         let emails = this.props.tree.emails.get();
         const selectedDoctorPk = this.props.tree.selectedDoctor.get();
         const { study } = this.props;
-        emails = _.map(emails.split(','), (email) => email.trim());
+        emails = _.compact(_.map(emails.split(','), (email) => email.trim()));
 
         const result = await this.context.services.addDoctorToStudyService(
             study.pk,
@@ -87,7 +88,7 @@ export const AddToStudy = schema(model)(React.createClass({
         if (doctors.status === 'Succeed') {
             options = _.map(doctors.data, (doctor) => (
                 {
-                    text: doctor.firstName,
+                    text: `${doctor.firstName} ${doctor.lastName}`,
                     value: doctor.pk,
                 }
             ))
@@ -108,7 +109,7 @@ export const AddToStudy = schema(model)(React.createClass({
                     />
                 </Form.Field>
                 <Form.Field>
-                    <label>Email list</label>
+                    <label>Patients emails list</label>
                     <TextArea
                         cursor={this.props.tree.emails}
                         placeholder="Enter emails, separated by comma (,)"
@@ -128,7 +129,7 @@ export const AddToStudy = schema(model)(React.createClass({
                         </Message.Header>
                         <Message.Content>
                             {addDoctorToStudyResult.data.allSuccess ?
-                                <div>All invitations sended</div>
+                                <div>All invitations was sent</div>
                             :
                                 this.renderFailEmails(addDoctorToStudyResult.data.failEmails)
                             }

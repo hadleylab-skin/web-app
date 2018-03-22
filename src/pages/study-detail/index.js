@@ -28,6 +28,7 @@ const StudyDetail = schema(model)(React.createClass({
     propTypes: {
         study: React.PropTypes.object,
         tree: BaobabPropTypes.cursor.isRequired,
+        isCoordinator: React.PropTypes.bool,
     },
 
     renderDoctors(doctors) {
@@ -84,7 +85,7 @@ const StudyDetail = schema(model)(React.createClass({
     },
 
     render() {
-        const { study } = this.props;
+        const { study, isCoordinator } = this.props;
 
         return (
             <GridWrapper>
@@ -95,13 +96,15 @@ const StudyDetail = schema(model)(React.createClass({
                             <Header>Study Detail</Header>
                             {this.renderTable(study)}
                         </Grid.Column>
-                        <Grid.Column width={6}>
-                            <Header>Add doctor to study</Header>
-                            <AddToStudy
-                                study={study}
-                                tree={this.props.tree}
-                            />
-                        </Grid.Column>
+                        {isCoordinator ?
+                            <Grid.Column width={6}>
+                                <Header>Add doctor to study</Header>
+                                <AddToStudy
+                                    study={study}
+                                    tree={this.props.tree}
+                                />
+                            </Grid.Column>
+                        : null}
                     </Grid.Row>
                 </Grid>
             </GridWrapper>
