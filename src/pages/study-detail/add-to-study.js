@@ -125,7 +125,7 @@ export const AddToStudy = schema(model)(React.createClass({
                 {addDoctorToStudyResult && addDoctorToStudyResult.status === 'Succeed' ?
                     <Message positive>
                         <Message.Header>
-                            Invites Successfully sended
+                            Invites successfully sent
                         </Message.Header>
                         <Message.Content>
                             {addDoctorToStudyResult.data.allSuccess ?
