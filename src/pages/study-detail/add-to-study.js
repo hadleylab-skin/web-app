@@ -129,7 +129,7 @@ export const AddToStudy = schema(model)(React.createClass({
                         </Message.Header>
                         <Message.Content>
                             {addDoctorToStudyResult.data.allSuccess ?
-                                <div>All invitations was sent</div>
+                                <div>All invitations were sent</div>
                             :
                                 this.renderFailEmails(addDoctorToStudyResult.data.failEmails)
                             }
