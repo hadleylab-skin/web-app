@@ -10,11 +10,11 @@ import docIcon from 'components/files-input/doc_icon.svg';
 import docStyles from 'components/files-input/styles.css'
 
 
-const model = {
+const model = (props, context) => ({
     tree: {
-        doctors: {},
+        invites: (c) => context.services.getInvitesOfStudyService(props.study.pk, c),
     },
-};
+});
 
 
 export const StudyDetailPage = React.createClass({
@@ -31,10 +31,24 @@ const StudyDetail = schema(model)(React.createClass({
         isCoordinator: React.PropTypes.bool,
     },
 
+    contextTypes: {
+        services: React.PropTypes.shape({
+            getInvitesOfStudyService: React.PropTypes.func.isRequired,
+        }),
+    },
+
     renderDoctors(doctors) {
         return _.map(doctors, (doctor, index) => (
             <div key={index}>
                 {doctor.firstName} {doctor.lastName} {doctor.email}
+            </div>
+        ));
+    },
+
+    renderInvites(invites) {
+        return _.map(invites.data, (invite, index) => (
+            <div key={index}>
+                {invite.email}
             </div>
         ));
     },
@@ -68,6 +82,7 @@ const StudyDetail = schema(model)(React.createClass({
                         ['Study title', study.title],
                         ['Doctors', this.renderDoctors(study.doctors)],
                         ['Patients', this.renderPatients()],
+                        ['Invites', this.renderInvites(this.props.tree.invites.get())],
                         ['Consent docs', this.renderConsentDocs(study.consentDocs)],
                     ], (row, index) => (
                         <Table.Row key={index}>
