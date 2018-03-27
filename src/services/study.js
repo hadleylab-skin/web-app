@@ -56,3 +56,19 @@ export function addDoctorToStudyService({ token }) {
         return _service(cursor, data);
     };
 }
+
+
+export function getInvitesOfStudyService({ token }) {
+    const headers = {
+        Authorization: `JWT ${token}`,
+    };
+
+    return (studyPk, cursor) => {
+        const _service = buildGetService(
+            `/api/v1/study/${studyPk}/invites/`,
+            _.identity,
+            _.merge({}, defaultHeaders, headers));
+
+        return _service(cursor);
+    };
+}
