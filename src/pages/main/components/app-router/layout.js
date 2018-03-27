@@ -29,19 +29,13 @@ export const InnerLayout = React.createClass({
                             :
                             null
                             }
-                            {
-                            this.props.isCoordinator
-                            ?
-                                <Menu.Item
-                                    active={location.pathname === '/studies'}
-                                >
-                                    <Link to="/studies">
-                                        Studies
-                                    </Link>
-                                </Menu.Item>
-                            :
-                            null
-                            }
+                            <Menu.Item
+                                active={location.pathname === '/studies'}
+                            >
+                                <Link to="/studies">
+                                    Studies
+                                </Link>
+                            </Menu.Item>
                             <Menu.Item
                                 position="right"
                             >
