@@ -13,6 +13,7 @@ import docStyles from 'components/files-input/styles.css'
 const model = (props, context) => ({
     tree: {
         invites: (c) => context.services.getInvitesOfStudyService(props.study.pk, c),
+        patients: (c) => context.services.getPatientsOfStudyService(props.study.pk, c),
     },
 });
 
@@ -34,6 +35,7 @@ const StudyDetail = schema(model)(React.createClass({
     contextTypes: {
         services: React.PropTypes.shape({
             getInvitesOfStudyService: React.PropTypes.func.isRequired,
+            getPatientsOfStudyService: React.PropTypes.func.isRequired,
         }),
     },
 
@@ -51,10 +53,6 @@ const StudyDetail = schema(model)(React.createClass({
                 {invite.email}
             </div>
         ));
-    },
-
-    renderPatients() {
-        return '123123';
     },
 
     renderConsentDocs(consentDocs) {
@@ -81,7 +79,7 @@ const StudyDetail = schema(model)(React.createClass({
                         ['Study ID', study.pk],
                         ['Study title', study.title],
                         ['Doctors', this.renderDoctors(study.doctors)],
-                        ['Patients', this.renderPatients()],
+                        ['Patients', this.renderInvites(this.props.tree.patients.get())],
                         ['Invites', this.renderInvites(this.props.tree.invites.get())],
                         ['Consent docs', this.renderConsentDocs(study.consentDocs)],
                     ], (row, index) => (

@@ -72,3 +72,19 @@ export function getInvitesOfStudyService({ token }) {
         return _service(cursor);
     };
 }
+
+
+export function getPatientsOfStudyService({ token }) {
+    const headers = {
+        Authorization: `JWT ${token}`,
+    };
+
+    return (studyPk, cursor) => {
+        const _service = buildGetService(
+            `/api/v1/study/${studyPk}/patients/`,
+            _.identity,
+            _.merge({}, defaultHeaders, headers));
+
+        return _service(cursor);
+    };
+}
