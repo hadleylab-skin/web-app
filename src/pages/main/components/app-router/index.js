@@ -163,6 +163,7 @@ export const AppRouter = schema(model)(React.createClass({
                         render={() => (
                             <StudyListPage
                                 tree={studiesCursor}
+                                isCoordinator={isCoordinator}
                             />
                         )}
                     />

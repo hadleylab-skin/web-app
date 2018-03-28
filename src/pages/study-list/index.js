@@ -27,6 +27,7 @@ export const StudyListPage = React.createClass({
 const StudyList = schema(model)(React.createClass({
     propTypes: {
         tree: BaobabPropTypes.cursor.isRequired,
+        isCoordinator: React.PropTypes.bool,
     },
 
     renderTable() {
@@ -74,6 +75,8 @@ const StudyList = schema(model)(React.createClass({
     },
 
     render() {
+        const { isCoordinator } = this.props;
+
         return (
             <GridWrapper>
                 <Grid>
@@ -92,18 +95,20 @@ const StudyList = schema(model)(React.createClass({
                                 cursor={this.props.tree.search}
                             />
                         </Grid.Column>
-                        <Grid.Column width={12}>
-                            <div style={{textAlign: 'right'}}>
-                                <Link to="/studies/add/">
-                                    <Button
-                                        type="button"
-                                        color="green"
-                                    >
-                                        Start a new study
-                                    </Button>
-                                </Link>
-                            </div>
-                        </Grid.Column>
+                        {isCoordinator ?
+                            <Grid.Column width={12}>
+                                <div style={{textAlign: 'right'}}>
+                                    <Link to="/studies/add/">
+                                        <Button
+                                            type="button"
+                                            color="green"
+                                        >
+                                            Start a new study
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </Grid.Column>
+                        : null}
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column>
