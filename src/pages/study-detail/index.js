@@ -13,8 +13,7 @@ import docStyles from 'components/files-input/styles.css'
 const model = (props, context) => ({
     tree: {
         invites: (c) => context.services.getInvitesOfStudyService(props.study.pk, c),
-        patients: (c) => context.services.getPatientsOfStudyService(props.study.pk, c),
-    },
+    }
 });
 
 
@@ -35,7 +34,6 @@ const StudyDetail = schema(model)(React.createClass({
     contextTypes: {
         services: React.PropTypes.shape({
             getInvitesOfStudyService: React.PropTypes.func.isRequired,
-            getPatientsOfStudyService: React.PropTypes.func.isRequired,
         }),
     },
 
@@ -47,12 +45,24 @@ const StudyDetail = schema(model)(React.createClass({
         ));
     },
 
-    renderInvites(invites) {
-        return _.map(invites.data, (invite, index) => (
+    renderInvitesEmails(invites) {
+        return _.map(invites, (invite, index) => (
             <div key={index}>
                 {invite.email}
             </div>
         ));
+    },
+
+    renderNewInvites(invites) {
+        return this.renderInvitesEmails(
+            _.filter(invites.data, {status: 1})
+        );
+    },
+
+    renderPatients(invites) {
+        return this.renderInvitesEmails(
+            _.filter(invites.data, {status: 2})
+        );
     },
 
     renderConsentDocs(consentDocs) {
@@ -79,8 +89,8 @@ const StudyDetail = schema(model)(React.createClass({
                         ['Study ID', study.pk],
                         ['Study title', study.title],
                         ['Doctors', this.renderDoctors(study.doctors)],
-                        ['Patients', this.renderInvites(this.props.tree.patients.get())],
-                        ['Invites', this.renderInvites(this.props.tree.invites.get())],
+                        ['Patients', this.renderPatients(this.props.tree.invites.get())],
+                        ['Invites', this.renderNewInvites(this.props.tree.invites.get())],
                         ['Consent docs', this.renderConsentDocs(study.consentDocs)],
                     ], (row, index) => (
                         <Table.Row key={index}>
