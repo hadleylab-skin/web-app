@@ -73,18 +73,18 @@ export function getInvitesOfStudyService({ token }) {
     };
 }
 
-
-export function getPatientsOfStudyService({ token }) {
-    const headers = {
-        Authorization: `JWT ${token}`,
-    };
-
-    return (studyPk, cursor) => {
-        const _service = buildGetService(
-            `/api/v1/study/${studyPk}/patients/`,
-            _.identity,
-            _.merge({}, defaultHeaders, headers));
-
-        return _service(cursor);
-    };
-}
+// when we will output patients in study, rewrite API and use this service
+// export function getPatientsOfStudyService({ token }) {
+//     const headers = {
+//         Authorization: `JWT ${token}`,
+//     };
+//
+//     return (studyPk, cursor) => {
+//         const _service = buildGetService(
+//             `/api/v1/study/${studyPk}/patients/`,
+//             _.identity,
+//             _.merge({}, defaultHeaders, headers));
+//
+//         return _service(cursor);
+//     };
+// }
