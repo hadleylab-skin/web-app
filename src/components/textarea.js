@@ -1,17 +1,20 @@
 import React from 'react';
-import BaobabPropTypes from 'baobab-prop-types';
 import { TextArea as TextAreaUI } from 'semantic-ui-react';
+import { BasicInput } from "./basic-input";
 
-export function TextArea({ cursor, ...props }) {
-    return (
-        <TextAreaUI
-            checked={cursor.get()}
-            onChange={(e, data) => cursor.set(data.value)}
-            {...props}
-        />
-    );
+
+export class TextArea extends BasicInput {
+    render() {
+        const { cursor, ...props } = this.props;
+        const { value } = this.state;
+
+        return (
+            <TextAreaUI
+                value={value}
+                checked={cursor.get()}
+                onChange={(e, data) => cursor.set(data.value)}
+                {...props}
+            />
+        );
+    }
 }
-
-TextArea.propTypes = {
-    cursor: BaobabPropTypes.cursor.isRequired,
-};
