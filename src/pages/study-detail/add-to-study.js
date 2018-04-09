@@ -7,7 +7,6 @@ import { Input, prepareErrorTexts, FormErrorMessages, Select, TextArea } from 'c
 
 const model = {
     tree: {
-        doctors: {},
         selectedDoctor: null,
         emails: '',
         addDoctorToStudyResult: {}
@@ -37,6 +36,10 @@ export const AddToStudy = schema(model)(React.createClass({
         tree: BaobabPropTypes.cursor.isRequired,
     },
 
+    componentWillMount() {
+      this.props.tree.set(model.tree);
+    },
+
     async submit() {
         let emails = this.props.tree.emails.get();
         const selectedDoctorPk = this.props.tree.selectedDoctor.get();
@@ -53,7 +56,7 @@ export const AddToStudy = schema(model)(React.createClass({
         );
 
         if (result.status === 'Succeed') {
-            const doctors = this.props.tree.doctors.get();
+            const doctors = this.props.doctors;
             const selectedDoctor = _.first(_.filter(doctors.data, {pk: selectedDoctorPk}));
             // this.props.study.doctors.push(selectedDoctor);
             this.props.tree.selectedDoctor.set(null);
@@ -75,7 +78,7 @@ export const AddToStudy = schema(model)(React.createClass({
 
     render() {
         const addDoctorToStudyResult = this.props.tree.addDoctorToStudyResult.get();
-        const doctors = this.props.tree.doctors.get();
+        const doctors = this.props.doctors;
         let options = [];
 
         let errorTexts = [];

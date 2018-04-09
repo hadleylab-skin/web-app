@@ -13,6 +13,7 @@ import docStyles from 'components/files-input/styles.css'
 const model = (props, context) => ({
     tree: {
         invites: (c) => context.services.getInvitesOfStudyService(props.study.pk, c),
+        addToStudyScreen: {},
     }
 });
 
@@ -124,7 +125,8 @@ const StudyDetail = schema(model)(React.createClass({
                                 <Header>Add doctor to study</Header>
                                 <AddToStudy
                                     study={study}
-                                    tree={this.props.tree}
+                                    doctors={this.props.tree.doctors.get()}
+                                    tree={this.props.tree.addToStudyScreen}
                                 />
                             </Grid.Column>
                         : null}

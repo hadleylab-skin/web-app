@@ -11,8 +11,10 @@ export class TextArea extends BasicInput {
         return (
             <TextAreaUI
                 value={value}
-                checked={cursor.get()}
-                onChange={(e, data) => cursor.set(data.value)}
+                onChange={(e, data) => {
+                    this.setState({ value: data.value });
+                    this.syncState();
+                }}
                 {...props}
             />
         );
