@@ -106,6 +106,7 @@ export const AppRouter = schema(model)(React.createClass({
                                 <PatientMoleListPage
                                     id={id}
                                     tree={patientMolesScreenCursor.select(id)}
+                                    studies={studiesCursor.data.get()}
                                     patient={patientCursor.data.get()}
                                     patientMolesCursor={patientMolesCursor}
                                 />
