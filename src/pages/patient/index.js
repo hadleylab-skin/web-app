@@ -73,6 +73,9 @@ const Patient = schema({})(React.createClass({
         services: React.PropTypes.shape({
             updatePatientService: React.PropTypes.func.isRequired,
         }),
+        cursors: React.PropTypes.shape({
+            doctor: BaobabPropTypes.cursor.isRequired,
+        }),
     },
 
     componentWillMount() {
@@ -133,7 +136,11 @@ const Patient = schema({})(React.createClass({
         const saved = this.props.tree.saved.get();
         const errors = this.props.tree.error.data.get() || {};
         const errorTexts = prepareErrorTexts(errors, titleMap);
-        const studies = patientCursor.studies.get();
+        let studies = patientCursor.studies.get();
+        const { isCoordinator, pk } = this.context.cursors.doctor.data.get();
+        if (isCoordinator) {
+            studies = _.filter(studies, (study) => study.author === pk);
+        }
 
         return (
             <GridWrapper>

@@ -32,6 +32,9 @@ const PatientList = schema(model)(React.createClass({
         services: React.PropTypes.shape({
             patientsService: React.PropTypes.func.isRequired,
         }),
+        cursors: React.PropTypes.shape({
+            doctor: BaobabPropTypes.cursor.isRequired,
+        }),
         mapRace: React.PropTypes.func.isRequired,
     },
 
@@ -60,6 +63,11 @@ const PatientList = schema(model)(React.createClass({
     },
 
     renderStudies(studies) {
+        const { isCoordinator, pk } = this.context.cursors.doctor.data.get();
+        if (isCoordinator) {
+            studies = _.filter(studies, (study) => study.author === pk);
+        }
+
         return _.map(studies, (study) => (
             <div key={study.pk}>
                 <Link to={`/studies/${study.pk}`}>
