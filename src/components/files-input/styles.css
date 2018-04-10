@@ -1,0 +1,19 @@
+.uploads_wrapper {}
+
+.uploads_label {
+    margin: 10px 0;
+}
+
+.upload_row {
+    margin-bottom: 10px;
+}
+
+.upload_row__img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+}
+
+.upload_row__name {
+    vertical-align: bottom;
+}

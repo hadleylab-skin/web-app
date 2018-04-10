@@ -20,6 +20,17 @@ export function getDoctorService({ token }) {
     };
 }
 
+export function getDoctorListService({ token }) {
+    const headers = {
+        Authorization: `JWT ${token}`,
+    };
+
+    return buildGetService(
+        '/api/v1/doctor/',
+        _.identity,
+        _.merge({}, defaultHeaders, headers));
+}
+
 export function updateDoctorService({ token }) {
     const headers = {
         Accept: 'application/json',

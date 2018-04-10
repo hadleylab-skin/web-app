@@ -30,6 +30,13 @@ export const InnerLayout = React.createClass({
                             null
                             }
                             <Menu.Item
+                                active={location.pathname === '/studies'}
+                            >
+                                <Link to="/studies">
+                                    Studies
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item
                                 position="right"
                             >
                                 <a onClick={this.props.logout} href="#/">
