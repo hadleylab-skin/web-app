@@ -125,7 +125,7 @@ const StudyDetail = schema(model)(React.createClass({
                                 <Header>Add doctor to study</Header>
                                 <AddToStudy
                                     study={study}
-                                    doctors={this.props.tree.doctors.get()}
+                                    doctors={this.props.tree.doctors.data.get()}
                                     tree={this.props.tree.addToStudyScreen}
                                 />
                             </Grid.Column>

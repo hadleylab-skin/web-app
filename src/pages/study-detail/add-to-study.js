@@ -29,10 +29,14 @@ export const AddToStudy = schema(model)(React.createClass({
         services: React.PropTypes.shape({
             addDoctorToStudyService: React.PropTypes.func.isRequired,
         }),
+        cursors: React.PropTypes.shape({
+            doctor: BaobabPropTypes.cursor.isRequired,
+        }),
     },
 
     propTypes: {
         study: React.PropTypes.object,
+        doctors: React.PropTypes.array,
         tree: BaobabPropTypes.cursor.isRequired,
     },
 
@@ -43,7 +47,7 @@ export const AddToStudy = schema(model)(React.createClass({
     async submit() {
         let emails = this.props.tree.emails.get();
         const selectedDoctorPk = this.props.tree.selectedDoctor.get();
-        const { study } = this.props;
+        const { study, doctors } = this.props;
         emails = _.compact(_.map(emails.split(','), (email) => email.trim()));
 
         const result = await this.context.services.addDoctorToStudyService(
@@ -56,9 +60,7 @@ export const AddToStudy = schema(model)(React.createClass({
         );
 
         if (result.status === 'Succeed') {
-            const doctors = this.props.doctors;
-            const selectedDoctor = _.first(_.filter(doctors.data, {pk: selectedDoctorPk}));
-            // this.props.study.doctors.push(selectedDoctor);
+            const selectedDoctor = _.first(_.filter(doctors, {pk: selectedDoctorPk}));
             this.props.tree.selectedDoctor.set(null);
             this.props.tree.emails.set('');
         }
@@ -88,8 +90,17 @@ export const AddToStudy = schema(model)(React.createClass({
             errorTexts = prepareErrorTexts(errors, titleMap);
         }
 
-        if (doctors.status === 'Succeed') {
-            options = _.map(doctors.data, (doctor) => (
+        const { coordinatorOfSite } = this.context.cursors.doctor.data.get();
+        if (doctors) {
+            let filteredDoctors = doctors;
+
+            if (coordinatorOfSite) {
+                filteredDoctors = _.filter(
+                    doctors,
+                    (doctor) => _.includes(doctor.sites, coordinatorOfSite));
+            }
+
+            options = _.map(filteredDoctors, (doctor) => (
                 {
                     text: `${doctor.firstName} ${doctor.lastName}`,
                     value: doctor.pk,
