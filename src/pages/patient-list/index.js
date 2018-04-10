@@ -32,6 +32,9 @@ const PatientList = schema(model)(React.createClass({
         services: React.PropTypes.shape({
             patientsService: React.PropTypes.func.isRequired,
         }),
+        cursors: React.PropTypes.shape({
+            doctor: BaobabPropTypes.cursor.isRequired,
+        }),
         mapRace: React.PropTypes.func.isRequired,
     },
 
@@ -59,6 +62,21 @@ const PatientList = schema(model)(React.createClass({
         }
     },
 
+    renderStudies(studies) {
+        const { isCoordinator, pk } = this.context.cursors.doctor.data.get();
+        if (isCoordinator) {
+            studies = _.filter(studies, (study) => study.author === pk);
+        }
+
+        return _.map(studies, (study) => (
+            <div key={study.pk}>
+                <Link to={`/studies/${study.pk}`}>
+                    {study.title} [{study.pk}]
+                </Link>
+            </div>
+        ));
+    },
+
     renderRace(race) {
         return this.context.mapRace(race);
     },
@@ -74,6 +92,7 @@ const PatientList = schema(model)(React.createClass({
                         <Table.HeaderCell>Race</Table.HeaderCell>
                         <Table.HeaderCell>Moles information</Table.HeaderCell>
                         <Table.HeaderCell>Consent</Table.HeaderCell>
+                        <Table.HeaderCell>Studies</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -89,7 +108,8 @@ const PatientList = schema(model)(React.createClass({
                                     this.renderSex(patient.data.sex),
                                     this.renderRace(patient.data.race),
                                     (<PatientMolesInfo patient={patient.data} />),
-                                    (<Consent noPhoto consent={patient.data.validConsent} />)],
+                                    (<Consent noPhoto consent={patient.data.validConsent} />),
+                                    this.renderStudies(patient.data.studies)],
                                 (data, index) => (
                                     <Table.Cell key={`${patient.data.pk}-${index}`}>
                                         {data}
@@ -122,10 +142,20 @@ const PatientList = schema(model)(React.createClass({
                 patient.data.molesImagesWithPathologicalDiagnosisRequired === 0) {
                 return false;
             }
+
+            let matchByStudies = false;
+            patient.data.studies.forEach((study) => {
+                if (_.includes(_.toLower(study.title), search) ||
+                    _.includes(_.toString(study.pk), search)) {
+                    matchByStudies = true;
+                }
+            });
+
             return _.isEmpty(search) ||
                 _.includes(_.toLower(patient.data.mrn), search) ||
                 _.includes(_.toLower(patient.data.firstName), search) ||
-                _.includes(_.toLower(patient.data.lastName), search);
+                _.includes(_.toLower(patient.data.lastName), search) ||
+                matchByStudies;
         });
 
         return (

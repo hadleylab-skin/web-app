@@ -2,6 +2,7 @@ import { updateDoctorService,
          getDoctorService,
          getSiteJoinRequestsService,
          handleSiteJoinRequestService,
+         getDoctorListService,
        } from './doctor';
 import { getPatientMolesService,
          addMoleService,
@@ -19,11 +20,18 @@ import { patientsService,
          updatePatientService,
          updatePatientConsentService,
        } from './patients';
+import { getStudiesService,
+         addStudyService,
+         addDoctorToStudyService,
+         getInvitesOfStudyService,
+       } from './study';
+import { addConsentDocService } from './consent-doc';
 
 
 export default {
     updateDoctorService,
     getDoctorService,
+    getDoctorListService,
     getSiteJoinRequestsService,
     handleSiteJoinRequestService,
     getPatientMolesService,
@@ -40,4 +48,9 @@ export default {
     createPatientService,
     updatePatientService,
     updatePatientConsentService,
+    getStudiesService,
+    addConsentDocService,
+    addStudyService,
+    addDoctorToStudyService,
+    getInvitesOfStudyService,
 };

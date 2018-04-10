@@ -2,59 +2,10 @@ import React from 'react';
 import _ from 'lodash';
 import BaobabPropTypes from 'baobab-prop-types';
 import { Input as InputUI } from 'semantic-ui-react';
+import { BasicInput } from "./basic-input";
 
-export const Input = React.createClass({
-    propTypes: {
-        cursor: BaobabPropTypes.cursor.isRequired,
-        toValue: React.PropTypes.func,
-        fromValue: React.PropTypes.func,
-    },
 
-    getDefaultProps() {
-        return {
-            toValue: _.identity,
-            fromValue: _.identity,
-        };
-    },
-
-    getInitialState() {
-        const value = this.props.cursor.get();
-        return {
-            value,
-        };
-    },
-
-    componentWillMount() {
-        this.props.cursor.on('update', this.updateState);
-    },
-
-    componentWillUnmount() {
-        this.cancelDebounced();
-        this.props.cursor.off('update', this.updateState);
-    },
-
-    updateState(e) {
-        this.cancelDebounced();
-        const value = e.data.currentData;
-        this.setState({ value });
-    },
-
-    _syncState() {
-        this.props.cursor.set(this.state.value);
-    },
-
-    syncState() {
-        this.cancelDebounced();
-        this.debounced = _.debounce(this._syncState, 200);
-        this.debounced();
-    },
-
-    cancelDebounced() {
-        if (this.debounced) {
-            this.debounced.cancel();
-        }
-    },
-
+export class Input extends BasicInput {
     render() {
         const { cursor, toValue, fromValue, ...props } = this.props;
         return (
@@ -69,6 +20,16 @@ export const Input = React.createClass({
                 {...props}
             />
         );
-    },
-});
+    }
+}
 
+Input.propTypes = {
+    cursor: BaobabPropTypes.cursor.isRequired,
+    toValue: React.PropTypes.func,
+    fromValue: React.PropTypes.func,
+};
+
+Input.defaultProps = {
+    toValue: _.identity,
+    fromValue: _.identity,
+};

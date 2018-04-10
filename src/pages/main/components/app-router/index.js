@@ -10,6 +10,9 @@ import { DoctorPage,
          PatientPage,
          PatientMoleListPage,
          MoleImagesListPage,
+         StudyListPage,
+         StudyAddPage,
+         StudyDetailPage,
 } from 'pages';
 import schema from 'libs/state';
 import { InnerLayout } from './layout';
@@ -17,13 +20,18 @@ import { InnerLayout } from './layout';
 const model = (props, context) => ({
     tree: {
         patients: context.services.patientsService,
+        doctors: context.services.getDoctorListService,
         patientsMoles: {},
         molesImages: {},
+
+        studies: context.services.getStudiesService,
 
         patientMolesScreen: {},
         patientScreen: {},
         registrationRequestsScreen: {},
         moleScreen: {},
+        studyAddScreen: {},
+        studyDetailScreen: {},
     },
 });
 
@@ -39,19 +47,24 @@ export const AppRouter = schema(model)(React.createClass({
         }),
         services: React.PropTypes.shape({
             patientsService: React.PropTypes.func.isRequired,
+            getStudiesService: React.PropTypes.func.isRequired,
             getPatientMolesService: React.PropTypes.func.isRequired,
+            getDoctorListService: React.PropTypes.func.isRequired,
         }),
     },
 
     render() {
         const { isCoordinator } = this.context.cursors.doctor.data.get();
         const patientsCursor = this.props.tree.patients;
+        const doctorsCursor = this.props.tree.doctors;
         const patientsMolesCursor = this.props.tree.patientsMoles;
         const molesImagesCursor = this.props.tree.molesImages;
         const moleScreenCursor = this.props.tree.moleScreen;
         const patientScreenCursor = this.props.tree.patientScreenCursor;
         const patientMolesScreenCursor = this.props.tree.patientMolesScreen;
         const registrationRequestsScreenCursor = this.props.tree.registrationRequestsScreen;
+        const studiesCursor = this.props.tree.studies;
+
         return (
             <HashRouter>
                 <InnerLayout
@@ -93,6 +106,7 @@ export const AppRouter = schema(model)(React.createClass({
                                 <PatientMoleListPage
                                     id={id}
                                     tree={patientMolesScreenCursor.select(id)}
+                                    studies={studiesCursor.data.get()}
                                     patient={patientCursor.data.get()}
                                     patientMolesCursor={patientMolesCursor}
                                 />
@@ -144,9 +158,44 @@ export const AppRouter = schema(model)(React.createClass({
                         path="/doctor-info"
                         component={DoctorPage}
                     />
+                    <Route
+                        exact
+                        path="/studies"
+                        render={() => (
+                            <StudyListPage
+                                tree={studiesCursor}
+                                isCoordinator={isCoordinator}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact
+                        path="/studies/:id"
+                        render={(props) => {
+                            const id = parseInt(props.match.params.id);
+                            const study = _.first(_.filter(studiesCursor.data.get(), {pk: id}));
+                            return study ? (
+                                <StudyDetailPage
+                                    study={study}
+                                    tree={this.props.tree}
+                                    isCoordinator={isCoordinator}
+                                    doctorsCursor={doctorsCursor}
+                                />
+                            ) : null;
+                        }}
+                    />
+                    <Route
+                        exact
+                        path="/studies/add/"
+                        render={() => (
+                            <StudyAddPage
+                                tree={this.props.tree.studyAddScreen}
+                                studiesCursor={studiesCursor}
+                            />
+                        )}
+                    />
                 </InnerLayout>
             </HashRouter>
         );
     },
 }));
-
