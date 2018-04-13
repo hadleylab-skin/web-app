@@ -71,7 +71,7 @@ const StudyDetail = schema(model)(React.createClass({
             <div key={index} className={docStyles.upload_row}>
                 <a href={consentDoc.file} target="_blank">
                     <img className={docStyles.upload_row__img}
-                        src={consentDoc.thumbnail ? consentDoc.thumbnail : docIcon}/>
+                        src={consentDoc.thumbnail ? consentDoc.file : docIcon}/>
                 </a>
                 <span className={docStyles.upload_row__name}>{consentDoc.originalFilename}</span>
             </div>

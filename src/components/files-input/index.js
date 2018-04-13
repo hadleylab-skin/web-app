@@ -54,7 +54,7 @@ export const FilesInput = React.createClass({
                 <div className={s.uploads_wrapper}>
                     {_.map(uploadedFiles, (item, index) => (
                         <div key={index} className={s.upload_row}>
-                            <img className={s.upload_row__img} src={item.thumbnail ? item.thumbnail : i} />
+                            <img className={s.upload_row__img} src={item.thumbnail ? item.file: i} />
                             <span className={s.upload_row__name}>{item.originalFilename}</span>
                         </div>
                     ))}
