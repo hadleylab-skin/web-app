@@ -14,6 +14,7 @@ const model = {
         loginPage: {},
         app: {},
         raceList: getRacesList(),
+        currentStudy: null,
     },
 };
 
@@ -25,6 +26,7 @@ export const LoginRouter = schema(model)(React.createClass({
     childContextTypes: {
         cursors: React.PropTypes.shape({
             doctor: BaobabPropTypes.cursor.isRequired,
+            currentStudy: BaobabPropTypes.cursor.isRequired,
         }),
         mapRace: React.PropTypes.func.isRequired,
         races: React.PropTypes.object.isRequired,
@@ -35,6 +37,7 @@ export const LoginRouter = schema(model)(React.createClass({
         return {
             cursors: {
                 doctor: this.props.tree.token.data.doctor,
+                currentStudy: this.props.tree.currentStudy,
             },
             mapRace: (race) => _.get(races, race, race),
             races,

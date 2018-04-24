@@ -78,6 +78,7 @@ export const AppRouter = schema(model)(React.createClass({
                             <PatientListPage
                                 tree={this.props.tree.patientsPage}
                                 patientsCursor={patientsCursor}
+                                studies={studiesCursor.data.get()}
                                 {...props}
                             />)}
                     />
@@ -130,7 +131,8 @@ export const AppRouter = schema(model)(React.createClass({
                                     updateParent={async () => {
                                         await this.context.services.getPatientMolesService(
                                             patientId,
-                                            patientMolesCursor);
+                                            patientMolesCursor,
+                                            this.context.cursors.currentStudy.get());
                                         await this.context.services.patientsService(patientsCursor);
                                     }}
                                 />

@@ -13,7 +13,10 @@ const model = (props, context) => ({
         anatomicalSite: null,
         study: null,
     },
-    patientMolesCursor: (c) => context.services.getPatientMolesService(props.id, c),
+    patientMolesCursor: (c) => context.services.getPatientMolesService(
+        props.id,
+        c,
+        context.cursors.currentStudy.get()),
 });
 
 
@@ -36,6 +39,9 @@ const PatientMoleList = schema(model)(React.createClass({
     contextTypes: {
         services: React.PropTypes.shape({
             getPatientMolesService: React.PropTypes.func.isRequired,
+        }),
+        cursors: React.PropTypes.shape({
+            currentStudy: BaobabPropTypes.cursor.isRequired,
         }),
     },
 
@@ -222,7 +228,7 @@ const PatientMoleList = schema(model)(React.createClass({
         const { studies } = this.props;
         const studyOptions = _.flatten(
             [
-                [{ text: 'All', value: null }],
+                [{ text: 'Not selected', value: null }],
                 _.map(studies, (study) => ({
                     text: study.title,
                     value: study.pk
