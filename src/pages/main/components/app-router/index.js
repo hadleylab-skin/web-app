@@ -17,6 +17,7 @@ import { DoctorPage,
 import schema from 'libs/state';
 import { InnerLayout } from './layout';
 
+
 const model = (props, context) => ({
     tree: {
         patients: context.services.patientsService,
@@ -129,11 +130,14 @@ export const AppRouter = schema(model)(React.createClass({
                                     moleImagesCursor={moleImagesCursor}
                                     tree={moleScreenCursor}
                                     updateParent={async () => {
+                                        const currentStudy = this.context.cursors.currentStudy.get();
                                         await this.context.services.getPatientMolesService(
                                             patientId,
                                             patientMolesCursor,
-                                            this.context.cursors.currentStudy.get());
-                                        await this.context.services.patientsService(patientsCursor);
+                                            currentStudy);
+                                        await this.context.services.patientsService(
+                                            patientsCursor,
+                                            currentStudy);
                                     }}
                                 />
                             );

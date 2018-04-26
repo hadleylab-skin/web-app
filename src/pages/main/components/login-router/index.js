@@ -2,6 +2,7 @@ import React from 'react';
 import BaobabPropTypes from 'baobab-prop-types';
 import _ from 'lodash';
 import { Container, Header } from 'semantic-ui-react';
+import cookie from 'react-cookies';
 import schema from 'libs/state';
 import { ServiceProvider, BaseWrapper } from 'components';
 import { getRacesList } from 'services/constants';
@@ -14,7 +15,7 @@ const model = {
         loginPage: {},
         app: {},
         raceList: getRacesList(),
-        currentStudy: null,
+        currentStudy: cookie.load('currentStudy') || null,
     },
 };
 

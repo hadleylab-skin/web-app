@@ -4,6 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Table, Grid, Header, Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import cookie from 'react-cookies';
 import { GridWrapper, Input, Select, Consent, PatientMolesInfo, Checkbox } from 'components';
 import schema from 'libs/state';
 
@@ -51,7 +52,10 @@ const PatientList = schema(model)(React.createClass({
     async currentStudyUpdated() {
         const { cursors, services } = this.context;
         const currentStudy = cursors.currentStudy.get();
+
         await services.patientsService(this.props.patientsCursor, currentStudy);
+
+        cookie.save('currentStudy', currentStudy);
     },
 
     formatMrn(mrn) {
@@ -167,8 +171,8 @@ const PatientList = schema(model)(React.createClass({
                 [{ text: 'Not selected', value: null }],
                 _.map(studies, (study) => ({
                     text: study.title,
-                    value: study.pk
-                }))
+                    value: study.pk,
+                })),
             ]
         );
 
