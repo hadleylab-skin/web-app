@@ -11,9 +11,11 @@ const model = (props, context) => ({
     tree: {
         requireAttention: false,
         anatomicalSite: null,
-        study: null,
     },
-    patientMolesCursor: (c) => context.services.getPatientMolesService(props.id, c),
+    patientMolesCursor: (c) => context.services.getPatientMolesService(
+        props.id,
+        c,
+        context.cursors.currentStudy.get()),
 });
 
 
@@ -36,6 +38,9 @@ const PatientMoleList = schema(model)(React.createClass({
     contextTypes: {
         services: React.PropTypes.shape({
             getPatientMolesService: React.PropTypes.func.isRequired,
+        }),
+        cursors: React.PropTypes.shape({
+            currentStudy: BaobabPropTypes.cursor.isRequired,
         }),
     },
 
@@ -114,7 +119,7 @@ const PatientMoleList = schema(model)(React.createClass({
         const { studies } = this.props;
 
         return _.map(studyPks, (studyPk, index) => {
-            const study = _.find(studies, {pk: studyPk});
+            const study = _.find(studies, { pk: studyPk });
             if (!study) {
                 return null;
             }
@@ -126,7 +131,7 @@ const PatientMoleList = schema(model)(React.createClass({
                     </Link>
                 </p>
             );
-        })
+        });
     },
 
     renderTable(moles) {
@@ -186,7 +191,6 @@ const PatientMoleList = schema(model)(React.createClass({
         const total = _.values(moles.data).length;
         const requireAttention = this.props.tree.requireAttention.get();
         const selectedAnatomicalSite = this.props.tree.anatomicalSite.get();
-        const selectedStudy = this.props.tree.study.get();
         const visibleMoles = _.filter(moles.data, (mole) => {
             if (requireAttention &&
                 mole.data.imagesApproveRequired === 0 &&
@@ -198,10 +202,6 @@ const PatientMoleList = schema(model)(React.createClass({
             let result = true;
             if (selectedAnatomicalSite) {
                 result &= _.last(mole.data.anatomicalSites).pk === selectedAnatomicalSite;
-            }
-
-            if (selectedStudy) {
-                result &= _.includes(mole.data.studies, selectedStudy);
             }
 
             return result;
@@ -218,17 +218,6 @@ const PatientMoleList = schema(model)(React.createClass({
 
         const options =
             _.flatten([[{ text: 'All', value: null }], availableAnatomicalSites]);
-
-        const { studies } = this.props;
-        const studyOptions = _.flatten(
-            [
-                [{ text: 'All', value: null }],
-                _.map(studies, (study) => ({
-                    text: study.title,
-                    value: study.pk
-                }))
-            ]
-        );
 
         return (
             <GridWrapper>
@@ -248,16 +237,6 @@ const PatientMoleList = schema(model)(React.createClass({
                                 placeholder="filter by anatomical site"
                                 cursor={this.props.tree.anatomicalSite}
                                 options={options}
-                            />
-                        </Grid.Column>
-                        <Grid.Column width={4}>
-                            <Select
-                                search
-                                selection
-                                fluid
-                                placeholder="filter by study"
-                                cursor={this.props.tree.study}
-                                options={studyOptions}
                             />
                         </Grid.Column>
                         <Grid.Column width={4}>

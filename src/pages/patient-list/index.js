@@ -4,7 +4,8 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Table, Grid, Header, Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { GridWrapper, Input, Consent, PatientMolesInfo, Checkbox } from 'components';
+import cookie from 'react-cookies';
+import { GridWrapper, Input, Select, Consent, PatientMolesInfo, Checkbox } from 'components';
 import schema from 'libs/state';
 
 const model = {
@@ -26,6 +27,7 @@ const PatientList = schema(model)(React.createClass({
     propTypes: {
         tree: BaobabPropTypes.cursor.isRequired,
         patientsCursor: BaobabPropTypes.cursor.isRequired,
+        studies: React.PropTypes.array,
     },
 
     contextTypes: {
@@ -34,8 +36,26 @@ const PatientList = schema(model)(React.createClass({
         }),
         cursors: React.PropTypes.shape({
             doctor: BaobabPropTypes.cursor.isRequired,
+            currentStudy: BaobabPropTypes.cursor.isRequired,
         }),
         mapRace: React.PropTypes.func.isRequired,
+    },
+
+    componentWillMount() {
+        this.context.cursors.currentStudy.on('update', this.currentStudyUpdated);
+    },
+
+    componentWillUnmount() {
+        this.context.cursors.currentStudy.off('update', this.currentStudyUpdated);
+    },
+
+    async currentStudyUpdated() {
+        const { cursors, services } = this.context;
+        const currentStudy = cursors.currentStudy.get();
+
+        await services.patientsService(this.props.patientsCursor, currentStudy);
+
+        cookie.save('currentStudy', currentStudy);
     },
 
     formatMrn(mrn) {
@@ -125,38 +145,36 @@ const PatientList = schema(model)(React.createClass({
 
     render() {
         const patients = this.props.patientsCursor.get();
-        if (patients.status !== 'Succeed') {
-            return (
-                <div>
-                    {JSON.stringify(this.props.tree.patients.get())}
-                </div>
-            );
-        }
         const total = _.values(patients.data).length;
         const requireAttention = this.props.tree.requireAttention.get();
-        const visiblePatients = _.filter(patients.data, (patient) => {
-            const search = _.toLower(this.props.tree.search.get());
-            if (requireAttention &&
-                patient.data.molesImagesApproveRequired === 0 &&
-                patient.data.molesImagesWithClinicalDiagnosisRequired === 0 &&
-                patient.data.molesImagesWithPathologicalDiagnosisRequired === 0) {
-                return false;
-            }
-
-            let matchByStudies = false;
-            patient.data.studies.forEach((study) => {
-                if (_.includes(_.toLower(study.title), search) ||
-                    _.includes(_.toString(study.pk), search)) {
-                    matchByStudies = true;
+        let visiblePatients = [];
+        if (patients.status === 'Succeed') {
+            visiblePatients = _.filter(patients.data, (patient) => {
+                const search = _.toLower(this.props.tree.search.get());
+                if (requireAttention &&
+                    patient.data.molesImagesApproveRequired === 0 &&
+                    patient.data.molesImagesWithClinicalDiagnosisRequired === 0 &&
+                    patient.data.molesImagesWithPathologicalDiagnosisRequired === 0) {
+                    return false;
                 }
-            });
 
-            return _.isEmpty(search) ||
-                _.includes(_.toLower(patient.data.mrn), search) ||
-                _.includes(_.toLower(patient.data.firstName), search) ||
-                _.includes(_.toLower(patient.data.lastName), search) ||
-                matchByStudies;
-        });
+                return _.isEmpty(search) ||
+                    _.includes(_.toLower(patient.data.mrn), search) ||
+                    _.includes(_.toLower(patient.data.firstName), search) ||
+                    _.includes(_.toLower(patient.data.lastName), search);
+            });
+        }
+
+        const { studies } = this.props;
+        const studyOptions = _.flatten(
+            [
+                [{ text: 'Not selected', value: null }],
+                _.map(studies, (study) => ({
+                    text: study.title,
+                    value: study.pk,
+                })),
+            ]
+        );
 
         return (
             <GridWrapper>
@@ -168,6 +186,16 @@ const PatientList = schema(model)(React.createClass({
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
+                        <Grid.Column width={4}>
+                            <Select
+                                search
+                                selection
+                                fluid
+                                placeholder="filter by study"
+                                cursor={this.context.cursors.currentStudy}
+                                options={studyOptions}
+                            />
+                        </Grid.Column>
                         <Grid.Column width={4}>
                             <Input
                                 fluid
