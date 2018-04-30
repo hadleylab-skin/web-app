@@ -47,7 +47,20 @@ export function patientsService({ token }) {
     const headers = {
         Authorization: `JWT ${token}`,
     };
-    return buildGetService('/api/v1/patient/', dehydratePatients, _.merge({}, defaultHeaders, headers));
+    return (cursor, study = null) => {
+        let url;
+        if (study) {
+            url = `/api/v1/patient/?study=${study}`;
+        } else {
+            url = '/api/v1/patient/';
+        }
+
+        const service = buildGetService(
+            url,
+            dehydratePatients,
+            _.merge({}, defaultHeaders, headers));
+        return service(cursor);
+    };
 }
 
 function hydratePatientData(remoteDoctor) {
@@ -131,8 +144,15 @@ export function updatePatientService({ token, doctor }) {
         Authorization: `JWT ${token}`,
     };
 
-    return (patientPk, cursor, data) => {
-        const _updatePatient = buildPostService(`/api/v1/patient/${patientPk}/`,
+    return (patientPk, cursor, data, study = null) => {
+        let url;
+        if (study) {
+            url = `/api/v1/patient/${patientPk}/?study=${study}`;
+        } else {
+            url = `/api/v1/patient/${patientPk}/`;
+        }
+
+        const _updatePatient = buildPostService(url,
             'PATCH',
             hydratePatientData(doctor),
             dehydratePatientData,
@@ -149,7 +169,7 @@ function hydrateConsentData(base64IMage) {
 
 export function updatePatientConsentService({ token }) {
     const headers = {
-        'Content-Type': 'multipart/form-data', 
+        'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
     };

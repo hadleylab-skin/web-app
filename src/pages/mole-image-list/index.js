@@ -13,7 +13,11 @@ const model = (props, context) => ({
         mole: {},
         requireAttention: false,
     },
-    moleImagesCursor: (c) => context.services.getMoleService(props.patientId, props.moleId, c),
+    moleImagesCursor: (c) => context.services.getMoleService(
+        props.patientId,
+        props.moleId,
+        c,
+        context.cursors.currentStudy.get()),
 });
 
 
@@ -70,7 +74,10 @@ const MoleImageList = schema(model)(React.createClass({
             const cursor = this.props.tree.mole.data.images.select(id).data.info;
             const data = cursor.get('data');
             const service = this.context.services.updateMolePhotoService;
-            const result = await service(this.props.patientId, this.props.moleId, id, cursor, data);
+            const result = await service(
+                this.props.patientId,
+                this.props.moleId,
+                id, cursor, data);
             this.props.moleImagesCursor.data.images.select(id).data.info.set(result);
             await this.props.updateParent();
         };

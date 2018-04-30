@@ -75,6 +75,7 @@ const Patient = schema({})(React.createClass({
         }),
         cursors: React.PropTypes.shape({
             doctor: BaobabPropTypes.cursor.isRequired,
+            currentStudy: BaobabPropTypes.cursor.isRequired,
         }),
     },
 
@@ -104,11 +105,13 @@ const Patient = schema({})(React.createClass({
             return;
         }
         const pk = this.props.tree.data.get('pk');
+        const currentStudy = this.context.cursors.currentStudy.get();
         let result = await this.context.services.updatePatientService(
             pk,
             this.props.tree,
-            data
-          );
+            data,
+            currentStudy
+        );
         if (result.status === 'Succeed') {
             this.props.patientCursor.set(this.props.tree.get());
             this.props.tree.saved.set(true);
@@ -162,7 +165,7 @@ const Patient = schema({})(React.createClass({
                             <Form
                                 onSubmit={this.submit}
                             >
-                               <Form.Group>
+                                <Form.Group>
                                     <Form.Field>
                                         <label>MRN</label>
                                         <Input
@@ -246,7 +249,7 @@ const Patient = schema({})(React.createClass({
                                     :
                                     null
                                 }
-                                <FormErrorMessages errorTexts={errorTexts}/>
+                                <FormErrorMessages errorTexts={errorTexts} />
                             </Form>
                         </Grid.Column>
                         <Grid.Column width={4}>
