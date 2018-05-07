@@ -177,7 +177,7 @@ const PatientList = schema(model)(React.createClass({
 
         const studyOptions = _.flatten(
             [
-                [{ text: 'Not selected', value: null }],
+                [{ text: 'Without studies', value: null }],
                 _.map(studies, (study) => ({
                     text: study.title,
                     value: study.pk,
@@ -200,7 +200,7 @@ const PatientList = schema(model)(React.createClass({
                                 search
                                 selection
                                 fluid
-                                placeholder="filter by study"
+                                placeholder="Without studies"
                                 cursor={this.context.cursors.currentStudy}
                                 options={studyOptions}
                             />
