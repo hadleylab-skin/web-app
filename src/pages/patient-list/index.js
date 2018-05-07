@@ -83,12 +83,17 @@ const PatientList = schema(model)(React.createClass({
     },
 
     renderStudies(studies) {
-        const { isCoordinator, pk } = this.context.cursors.doctor.data.get();
+        const { isCoordinator, isParticipant, pk } = this.context.cursors.doctor.data.get();
+        const studyPks = _.map(this.props.studies, (study) => study.pk);
+
+        let filteredStudies = studies;
         if (isCoordinator) {
-            studies = _.filter(studies, (study) => study.author === pk);
+            filteredStudies = _.filter(filteredStudies, (study) => study.author === pk);
+        } else if (!isParticipant) {
+            filteredStudies = _.filter(filteredStudies, (study) => _.includes(studyPks, study.pk));
         }
 
-        return _.map(studies, (study) => (
+        return _.map(filteredStudies, (study) => (
             <div key={study.pk}>
                 <Link to={`/studies/${study.pk}`}>
                     {study.title} [{study.pk}]
@@ -166,6 +171,10 @@ const PatientList = schema(model)(React.createClass({
         }
 
         const { studies } = this.props;
+        if (!studies) {
+            return null;
+        }
+
         const studyOptions = _.flatten(
             [
                 [{ text: 'Not selected', value: null }],
