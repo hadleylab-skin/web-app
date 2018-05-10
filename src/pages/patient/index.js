@@ -62,7 +62,11 @@ export const PatientPage = React.createClass({
     },
 });
 
-const Patient = schema({})(React.createClass({
+const model = {
+    doctorKeys: {},
+};
+
+const Patient = schema(model)(React.createClass({
     propTypes: {
         tree: BaobabPropTypes.cursor.isRequired,
         patientCursor: BaobabPropTypes.cursor.isRequired,
@@ -72,6 +76,7 @@ const Patient = schema({})(React.createClass({
         races: React.PropTypes.object.isRequired,
         services: React.PropTypes.shape({
             updatePatientService: React.PropTypes.func.isRequired,
+            getDoctorKeyListService: React.PropTypes.func.isRequired,
         }),
         cursors: React.PropTypes.shape({
             doctor: BaobabPropTypes.cursor.isRequired,
@@ -85,6 +90,7 @@ const Patient = schema({})(React.createClass({
             patientCursor.on('update', this.setupAndUnsubscribe);
         } else {
             this.props.tree.set(patientCursor.get());
+            this.setupDoctorKeys();
         }
     },
 
@@ -92,6 +98,35 @@ const Patient = schema({})(React.createClass({
         if (e.data.currentData.status === 'Succeed') {
             this.props.tree.set(e.data.currentData);
             this.props.patientCursor.off(this.setupAndUnsubscribe);
+            this.setupDoctorKeys();
+        }
+    },
+
+    async setupDoctorKeys() {
+        const { cursors, services } = this.context;
+        const { doctors } = this.props.patientCursor.get('data');
+        const { pk, isCoordinator, myDoctorsPublicKeys } = cursors.doctor.data.get();
+
+        if (isCoordinator) {
+            const doctorsWithKeys = _.map(_.keys(myDoctorsPublicKeys), (key) => parseInt(key, 10));
+            const doctorsWithoutKeys = _.filter(
+                doctors,
+                (doctor) => !_.includes(doctorsWithKeys, doctor) && doctor !== pk
+            );
+
+            const result = await services.getDoctorKeyListService(
+                this.props.tree.doctorKeys,
+                doctorsWithoutKeys
+            );
+            if (result.status === 'Succeed') {
+                let keys = _.map(result.data, (item) => {
+                    let result2 = {};
+                    result2[item.pk] = item.publicKey;
+                    return result2;
+                });
+                keys = Object.assign({}, ...keys);
+                cursors.doctor.data.myDoctorsPublicKeys.merge(keys);
+            }
         }
     },
 
