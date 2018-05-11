@@ -114,18 +114,20 @@ const Patient = schema(model)(React.createClass({
                 (doctor) => !_.includes(doctorsWithKeys, doctor) && doctor !== pk
             );
 
-            const result = await services.getDoctorKeyListService(
-                this.props.tree.doctorKeys,
-                doctorsWithoutKeys
-            );
-            if (result.status === 'Succeed') {
-                let keys = _.map(result.data, (item) => {
-                    let result2 = {};
-                    result2[item.pk] = item.publicKey;
-                    return result2;
-                });
-                keys = Object.assign({}, ...keys);
-                cursors.doctor.data.myDoctorsPublicKeys.merge(keys);
+            if (!_.isEmpty(doctorsWithoutKeys)) {
+                const result = await services.getDoctorKeyListService(
+                    this.props.tree.doctorKeys,
+                    doctorsWithoutKeys
+                );
+                if (result.status === 'Succeed') {
+                    let keys = _.map(result.data, (item) => {
+                        let result2 = {};
+                        result2[item.pk] = item.publicKey;
+                        return result2;
+                    });
+                    keys = Object.assign({}, ...keys);
+                    cursors.doctor.data.myDoctorsPublicKeys.merge(keys);
+                }
             }
         }
     },
@@ -145,7 +147,8 @@ const Patient = schema(model)(React.createClass({
             pk,
             this.props.tree,
             data,
-            currentStudy
+            currentStudy,
+            this.context.cursors.doctor.get(),
         );
         if (result.status === 'Succeed') {
             this.props.patientCursor.set(this.props.tree.get());

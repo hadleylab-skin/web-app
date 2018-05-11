@@ -138,13 +138,13 @@ export function createPatientService({ token, doctor }) {
     );
 }
 
-export function updatePatientService({ token, doctor }) {
+export function updatePatientService({ token }) {
     const headers = {
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
     };
 
-    return (patientPk, cursor, data, study = null) => {
+    return (patientPk, cursor, data, study, doctor) => {
         let url;
         if (study) {
             url = `/api/v1/patient/${patientPk}/?study=${study}`;
