@@ -40,9 +40,15 @@ function dehydratePatientData(data) {
 }
 
 function dehydratePatients(patients) {
-    const data = _.map(
-        patients,
-        dehydratePatientData);
+    let data = _.map(
+        patients, (patient) => {
+            try {
+                return dehydratePatientData(patient);
+            } catch (error) {
+                return null;
+            }
+        });
+    data = _.remove(data, null);
 
     return convertListToDict(wrapItemsAsRemoteData(data));
 }
