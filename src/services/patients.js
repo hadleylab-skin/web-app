@@ -26,7 +26,11 @@ function dehydratePatientData(data) {
     const aesKey = decryptRSA(dehydratedData.encryptedKey);
     _.forEach(_.pickBy(dehydratedData), (value, key) => {
         if (_.includes(needEncryption, key) && value !== '') {
-            dehydratedData[key] = decryptAES(value, aesKey);
+            try {
+                dehydratedData[key] = decryptAES(value, aesKey);
+            } catch (error) {
+                throw 'patient_decryption_error';
+            }
         }
     });
     if (dehydratedData.mrn === null) {
