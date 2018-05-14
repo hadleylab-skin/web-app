@@ -105,15 +105,15 @@ const Patient = schema(model)(React.createClass({
     async setupDoctorKeys() {
         const { cursors, services } = this.context;
         const { doctors } = this.props.patientCursor.get('data');
-        const { pk, isCoordinator, myDoctorsPublicKeys } = cursors.doctor.data.get();
+        const { pk, myDoctorsPublicKeys } = cursors.doctor.data.get();
 
-        if (isCoordinator) {
-            const doctorsWithKeys = _.map(_.keys(myDoctorsPublicKeys), (key) => parseInt(key, 10));
-            const doctorsWithoutKeys = _.filter(
-                doctors,
-                (doctor) => !_.includes(doctorsWithKeys, doctor) && doctor !== pk
-            );
+        const doctorsWithKeys = _.map(_.keys(myDoctorsPublicKeys), (key) => parseInt(key, 10));
+        const doctorsWithoutKeys = _.filter(
+            doctors,
+            (doctor) => !_.includes(doctorsWithKeys, doctor) && doctor !== pk
+        );
 
+        if (!_.isEmpty(doctorsWithoutKeys)) {
             const result = await services.getDoctorKeyListService(
                 this.props.tree.doctorKeys,
                 doctorsWithoutKeys
@@ -145,7 +145,8 @@ const Patient = schema(model)(React.createClass({
             pk,
             this.props.tree,
             data,
-            currentStudy
+            currentStudy,
+            this.context.cursors.doctor.get(),
         );
         if (result.status === 'Succeed') {
             this.props.patientCursor.set(this.props.tree.get());

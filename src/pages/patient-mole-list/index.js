@@ -7,16 +7,12 @@ import { Link } from 'react-router-dom';
 import { GridWrapper, Checkbox, Select } from 'components';
 import schema from 'libs/state';
 
-const model = (props, context) => ({
+const model = {
     tree: {
         requireAttention: false,
         anatomicalSite: null,
     },
-    patientMolesCursor: (c) => context.services.getPatientMolesService(
-        props.id,
-        c,
-        context.cursors.currentStudy.get()),
-});
+};
 
 
 export const PatientMoleListPage = React.createClass({
@@ -42,6 +38,13 @@ const PatientMoleList = schema(model)(React.createClass({
         cursors: React.PropTypes.shape({
             currentStudy: BaobabPropTypes.cursor.isRequired,
         }),
+    },
+
+    componentWillMount() {
+        this.context.services.getPatientMolesService(
+            this.props.id,
+            this.props.patientMolesCursor,
+            this.context.cursors.currentStudy.get());
     },
 
     renderMolesInfo(mole) {
@@ -182,11 +185,7 @@ const PatientMoleList = schema(model)(React.createClass({
     render() {
         const moles = this.props.patientMolesCursor.get();
         if (moles.status !== 'Succeed') {
-            return (
-                <div>
-                    {JSON.stringify(moles)}
-                </div>
-            );
+            return null;
         }
         const total = _.values(moles.data).length;
         const requireAttention = this.props.tree.requireAttention.get();

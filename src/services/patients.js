@@ -26,7 +26,11 @@ function dehydratePatientData(data) {
     const aesKey = decryptRSA(dehydratedData.encryptedKey);
     _.forEach(_.pickBy(dehydratedData), (value, key) => {
         if (_.includes(needEncryption, key) && value !== '') {
-            dehydratedData[key] = decryptAES(value, aesKey);
+            try {
+                dehydratedData[key] = decryptAES(value, aesKey);
+            } catch (error) {
+                throw 'patient_decryption_error';
+            }
         }
     });
     if (dehydratedData.mrn === null) {
@@ -36,9 +40,15 @@ function dehydratePatientData(data) {
 }
 
 function dehydratePatients(patients) {
-    const data = _.map(
-        patients,
-        dehydratePatientData);
+    let data = _.map(
+        patients, (patient) => {
+            try {
+                return dehydratePatientData(patient);
+            } catch (error) {
+                return null;
+            }
+        });
+    data = _.remove(data, null);
 
     return convertListToDict(wrapItemsAsRemoteData(data));
 }
@@ -138,13 +148,13 @@ export function createPatientService({ token, doctor }) {
     );
 }
 
-export function updatePatientService({ token, doctor }) {
+export function updatePatientService({ token }) {
     const headers = {
         Accept: 'application/json',
         Authorization: `JWT ${token}`,
     };
 
-    return (patientPk, cursor, data, study = null) => {
+    return (patientPk, cursor, data, study, doctor) => {
         let url;
         if (study) {
             url = `/api/v1/patient/${patientPk}/?study=${study}`;
