@@ -8,17 +8,12 @@ import { Link } from 'react-router-dom';
 import schema from 'libs/state';
 import { convertCmToIn, convertInToCm } from 'libs/misc';
 
-const model = (props, context) => ({
+const model = {
     tree: {
         mole: {},
         requireAttention: false,
     },
-    moleImagesCursor: (c) => context.services.getMoleService(
-        props.patientId,
-        props.moleId,
-        c,
-        context.cursors.currentStudy.get()),
-});
+};
 
 
 export const MoleImagesListPage = React.createClass({
@@ -47,20 +42,13 @@ const MoleImageList = schema(model)(React.createClass({
         }),
     },
 
-    componentWillMount() {
-        const moleImagesCursor = this.props.moleImagesCursor;
-        if (_.isEmpty(moleImagesCursor.get()) || moleImagesCursor.status.get() === 'Loading') {
-            moleImagesCursor.on('update', this.setupAndUnsubscribe);
-        } else {
-            this.props.tree.mole.set(moleImagesCursor.get());
-        }
-    },
-
-    setupAndUnsubscribe(e) {
-        this.props.tree.mole.set(e.data.currentData);
-        if (e.data.currentData.status === 'Succeed') {
-            this.props.moleImagesCursor.off(this.setupAndUnsubscribe);
-        }
+    async componentWillMount() {
+        const result = await this.context.services.getMoleService(
+            this.props.patientId,
+            this.props.moleId,
+            this.props.tree.mole,
+            this.context.cursors.currentStudy.get());
+        this.props.moleImagesCursor.set(result);
     },
 
     isButtonDiabled(id) {
@@ -224,13 +212,9 @@ const MoleImageList = schema(model)(React.createClass({
     },
 
     render() {
-        const mole = this.props.moleImagesCursor.get();
+        const mole = this.props.tree.mole.get();
         if (mole.status !== 'Succeed') {
-            return (
-                <div>
-                    {JSON.stringify(mole)}
-                </div>
-            );
+            return null;
         }
         const images = this.props.tree.mole.data.images.get();
         const total = _.values(images).length;

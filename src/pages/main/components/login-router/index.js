@@ -15,7 +15,7 @@ const model = {
         loginPage: {},
         app: {},
         raceList: getRacesList(),
-        currentStudy: cookie.load('currentStudy') || null,
+        currentStudy: parseInt(cookie.load('currentStudy'), 10) || null,
     },
 };
 

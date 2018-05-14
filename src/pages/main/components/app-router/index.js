@@ -20,7 +20,7 @@ import { InnerLayout } from './layout';
 
 const model = (props, context) => ({
     tree: {
-        patients: context.services.patientsService,
+        patients: (cursor) => context.services.patientsService(cursor, context.cursors.currentStudy.get()),
         doctors: context.services.getDoctorListService,
         patientsMoles: {},
         molesImages: {},

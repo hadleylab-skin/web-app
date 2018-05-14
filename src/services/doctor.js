@@ -31,6 +31,21 @@ export function getDoctorListService({ token }) {
         _.merge({}, defaultHeaders, headers));
 }
 
+export function getDoctorKeyListService({ token }) {
+    const headers = {
+        Authorization: `JWT ${token}`,
+    };
+
+    return (cursor, doctorPks) => {
+        const doctors = doctorPks.join(',');
+        const service = buildGetService(
+        `/api/v1/doctor/public_keys/?doctors=${doctors}`,
+        _.identity,
+        _.merge({}, defaultHeaders, headers));
+        return service(cursor);
+    };
+}
+
 export function updateDoctorService({ token }) {
     const headers = {
         Accept: 'application/json',
