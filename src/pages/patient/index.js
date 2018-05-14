@@ -105,29 +105,27 @@ const Patient = schema(model)(React.createClass({
     async setupDoctorKeys() {
         const { cursors, services } = this.context;
         const { doctors } = this.props.patientCursor.get('data');
-        const { pk, isCoordinator, myDoctorsPublicKeys } = cursors.doctor.data.get();
+        const { pk, myDoctorsPublicKeys } = cursors.doctor.data.get();
 
-        if (isCoordinator) {
-            const doctorsWithKeys = _.map(_.keys(myDoctorsPublicKeys), (key) => parseInt(key, 10));
-            const doctorsWithoutKeys = _.filter(
-                doctors,
-                (doctor) => !_.includes(doctorsWithKeys, doctor) && doctor !== pk
+        const doctorsWithKeys = _.map(_.keys(myDoctorsPublicKeys), (key) => parseInt(key, 10));
+        const doctorsWithoutKeys = _.filter(
+            doctors,
+            (doctor) => !_.includes(doctorsWithKeys, doctor) && doctor !== pk
+        );
+
+        if (!_.isEmpty(doctorsWithoutKeys)) {
+            const result = await services.getDoctorKeyListService(
+                this.props.tree.doctorKeys,
+                doctorsWithoutKeys
             );
-
-            if (!_.isEmpty(doctorsWithoutKeys)) {
-                const result = await services.getDoctorKeyListService(
-                    this.props.tree.doctorKeys,
-                    doctorsWithoutKeys
-                );
-                if (result.status === 'Succeed') {
-                    let keys = _.map(result.data, (item) => {
-                        let result2 = {};
-                        result2[item.pk] = item.publicKey;
-                        return result2;
-                    });
-                    keys = Object.assign({}, ...keys);
-                    cursors.doctor.data.myDoctorsPublicKeys.merge(keys);
-                }
+            if (result.status === 'Succeed') {
+                let keys = _.map(result.data, (item) => {
+                    let result2 = {};
+                    result2[item.pk] = item.publicKey;
+                    return result2;
+                });
+                keys = Object.assign({}, ...keys);
+                cursors.doctor.data.myDoctorsPublicKeys.merge(keys);
             }
         }
     },
