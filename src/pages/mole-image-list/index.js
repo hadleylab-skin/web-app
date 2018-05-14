@@ -43,7 +43,7 @@ const MoleImageList = schema(model)(React.createClass({
     },
 
     async componentWillMount() {
-        const result = this.context.services.getMoleService(
+        const result = await this.context.services.getMoleService(
             this.props.patientId,
             this.props.moleId,
             this.props.tree.mole,
