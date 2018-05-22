@@ -13,7 +13,7 @@ export const InnerLayout = React.createClass({
                                 active={location.pathname === '/'}
                             >
                                 <Link to="/">
-                                    Patients list
+                                    Patients
                                 </Link>
                             </Menu.Item>
                             {

@@ -123,7 +123,7 @@ export const AddToStudy = schema(model)(React.createClass({
                     />
                 </Form.Field>
                 <Form.Field>
-                    <label>Patients emails list</label>
+                    <label>Patient Email List</label>
                     <TextArea
                         cursor={this.props.tree.emails}
                         placeholder="Enter emails, separated by comma (,)"

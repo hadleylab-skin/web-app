@@ -191,7 +191,7 @@ const PatientList = schema(model)(React.createClass({
                     <Grid.Row />
                     <Grid.Row>
                         <Grid.Column>
-                            <Header>Patients List</Header>
+                            <Header>Patients</Header>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>

@@ -90,7 +90,7 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
                                     </Input>
                                 </Form.Field>
                                 <Form.Field>
-                                    <label>Consent docs</label>
+                                    <label>Consent Documents</label>
                                     <FilesInput
                                         cursor={this.props.tree.consentDocs}
                                         uploadService={this.context.services.addConsentDocService}
