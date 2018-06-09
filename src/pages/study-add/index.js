@@ -2,8 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { withRouter } from 'react-router';
 import BaobabPropTypes from 'baobab-prop-types';
-import { Table, Grid, Header, Button, Form, Icon } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Grid, Header, Button, Form, Icon } from 'semantic-ui-react';
 import { GridWrapper, Input, FilesInput, prepareErrorTexts, FormErrorMessages } from 'components';
 import schema from 'libs/state';
 
@@ -43,7 +42,7 @@ const StudyAdd = schema(model)(withRouter(React.createClass({
         const consentDocs = this.props.tree.consentDocs.get();
 
         const result = await this.context.services.addStudyService(
-            this.props.tree.addStudyResult, {title, consentDocs});
+            this.props.tree.addStudyResult, { title, consentDocs });
         if (result.status === 'Succeed') {
             this.props.tree.title.set('');
             this.props.tree.consentDocs.set([]);

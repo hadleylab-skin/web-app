@@ -1,21 +1,24 @@
 import React from 'react';
 import _ from 'lodash';
 import BaobabPropTypes from 'baobab-prop-types';
-import { Input as InputUI, Button, Label } from 'semantic-ui-react';
-import s from './styles.css'
-import i from './doc_icon.svg'
+import { Input as InputUI } from 'semantic-ui-react';
+import s from './styles.css';
+import i from './doc_icon.svg';
 
 
 export const FilesInput = React.createClass({
     propTypes: {
         cursor: BaobabPropTypes.cursor.isRequired,
+        initials: React.PropTypes.array,
         uploadService: React.PropTypes.func.isRequired,
     },
 
     getInitialState() {
+        const { initials } = this.props;
+
         return {
-            uploadedFiles: [],
-            uploadPks: [],
+            uploadedFiles: _.map(initials, _.clone) || [],
+            uploadPks: _.map(initials, (file) => file.pk) || [],
         };
     },
 
@@ -33,7 +36,7 @@ export const FilesInput = React.createClass({
 
     render() {
         const { uploadedFiles } = this.state;
-        const { cursor, ...props } = this.props;
+        const { cursor, uploadService, initials, ...props } = this.props;
 
         return (
             <div>
@@ -54,7 +57,9 @@ export const FilesInput = React.createClass({
                 <div className={s.uploads_wrapper}>
                     {_.map(uploadedFiles, (item, index) => (
                         <div key={index} className={s.upload_row}>
-                            <img className={s.upload_row__img} src={item.thumbnail ? item.file: i} />
+                            <a href={item.file} target="_blank">
+                                <img className={s.upload_row__img} src={item.thumbnail ? item.file : i} />
+                            </a>
                             <span className={s.upload_row__name}>{item.originalFilename}</span>
                         </div>
                     ))}

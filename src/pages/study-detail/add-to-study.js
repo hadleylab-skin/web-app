@@ -1,15 +1,16 @@
 import React from 'react';
+import _ from 'lodash';
 import BaobabPropTypes from 'baobab-prop-types';
 import schema from 'libs/state';
 import { Button, Form, Message } from 'semantic-ui-react';
-import { Input, prepareErrorTexts, FormErrorMessages, Select, TextArea } from 'components';
+import { prepareErrorTexts, FormErrorMessages, Select, TextArea } from 'components';
 
 
 const model = {
     tree: {
         selectedDoctor: null,
         emails: '',
-        addDoctorToStudyResult: {}
+        addDoctorToStudyResult: {},
     },
 };
 
