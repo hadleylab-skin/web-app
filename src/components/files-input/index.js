@@ -22,6 +22,16 @@ export const FilesInput = React.createClass({
         };
     },
 
+    removeItem(uploadPk) {
+        const uploadPks = _.filter(this.state.uploadPks, (pk) => pk !== uploadPk);
+        const uploadedFiles = _.filter(
+            this.state.uploadedFiles,
+            (item) => item.pk !== uploadPk);
+
+        this.setState({ uploadPks, uploadedFiles });
+        this.props.cursor.set(uploadPks);
+    },
+
     handleOnChange(e) {
         _.map(e.target.files, async (file) => {
             const { uploadedFiles, uploadPks } = this.state;
@@ -45,7 +55,7 @@ export const FilesInput = React.createClass({
                     <InputUI
                         type="file"
                         multiple
-                        style={{display: 'none'}}
+                        style={{ display: 'none' }}
                         onBlur={this.syncState}
                         onChange={this.handleOnChange}
                         {...props}
@@ -61,6 +71,8 @@ export const FilesInput = React.createClass({
                                 <img className={s.upload_row__img} src={item.thumbnail ? item.file : i} />
                             </a>
                             <span className={s.upload_row__name}>{item.originalFilename}</span>
+                            <div onClick={() => this.removeItem(item.pk)}
+                                 className={s.upload_row__remove}>✘</div>
                         </div>
                     ))}
                 </div>

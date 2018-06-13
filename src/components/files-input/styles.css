@@ -6,6 +6,7 @@
 
 .upload_row {
     margin-bottom: 10px;
+    position: relative;
 }
 
 .upload_row__img {
@@ -16,4 +17,19 @@
 
 .upload_row__name {
     vertical-align: bottom;
+}
+
+.upload_row__remove {
+    position: absolute;
+    background: #e12422;
+    color: white;
+    top: 0;
+    left: 75px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 23px;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    cursor: pointer;
 }
