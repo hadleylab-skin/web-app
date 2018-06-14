@@ -19,6 +19,7 @@ export const FilesInput = React.createClass({
         return {
             uploadedFiles: _.map(initials, _.clone) || [],
             uploadPks: _.map(initials, (file) => file.pk) || [],
+            errors: [],
         };
     },
 
@@ -33,6 +34,9 @@ export const FilesInput = React.createClass({
     },
 
     handleOnChange(e) {
+        let errors = [];
+        this.setState({ errors });
+
         _.map(e.target.files, async (file) => {
             const { uploadedFiles, uploadPks } = this.state;
             const result = await this.props.uploadService(this.props.cursor, file);
@@ -40,12 +44,15 @@ export const FilesInput = React.createClass({
                 uploadedFiles.push(result.data);
                 uploadPks.push(result.data.pk);
                 this.props.cursor.set(uploadPks);
+            } else if (result.status === 'Failure') {
+                errors = _.concat(errors, `${file.name}: ${result.error.data.file}`);
+                this.setState({ errors });
             }
         });
     },
 
     render() {
-        const { uploadedFiles } = this.state;
+        const { uploadedFiles, errors } = this.state;
         const { cursor, uploadService, initials, ...props } = this.props;
 
         return (
@@ -74,6 +81,13 @@ export const FilesInput = React.createClass({
                             <div onClick={() => this.removeItem(item.pk)}
                                  className={s.upload_row__remove}>✘</div>
                         </div>
+                    ))}
+                </div>
+                <div className={s.upload_errors}>
+                    {_.map(errors, (error, index) => (
+                        <p key={`upload_error_${index}`}>
+                            {error}
+                        </p>
                     ))}
                 </div>
             </div>

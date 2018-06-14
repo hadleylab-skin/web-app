@@ -33,3 +33,8 @@
     border-bottom: 1px solid black;
     cursor: pointer;
 }
+
+.upload_errors {
+    margin-top: 10px;
+    color: #e10000;
+}
