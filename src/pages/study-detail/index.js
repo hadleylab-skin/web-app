@@ -9,16 +9,15 @@ import docIcon from 'components/files-input/doc_icon.svg';
 import docStyles from 'components/files-input/styles.css'
 
 
-const model = (props, context) => ({
+const model = {
     tree: {
-        invites: (c) => context.services.getInvitesOfStudyService(props.study.pk, c),
+        invites: {},
         addToStudyScreen: {},
         saveStudyResult: {},
-
-        title: props.study.title,
+        title: '',
         consentDocs: [],
     },
-});
+};
 
 
 export const StudyDetailPage = React.createClass({
@@ -32,6 +31,7 @@ const StudyDetail = schema(model)(React.createClass({
     propTypes: {
         study: React.PropTypes.object,
         tree: BaobabPropTypes.cursor.isRequired,
+        studiesCursor: BaobabPropTypes.cursor.isRequired,
         isCoordinator: React.PropTypes.bool,
     },
 
@@ -40,19 +40,29 @@ const StudyDetail = schema(model)(React.createClass({
             getInvitesOfStudyService: React.PropTypes.func.isRequired,
             addConsentDocService: React.PropTypes.func.isRequired,
             updateStudyService: React.PropTypes.func.isRequired,
+            getStudiesService: React.PropTypes.func.isRequired,
         }),
     },
 
     componentWillMount() {
-        this.props.tree.consentDocs.set(
-            _.map(this.props.study.consentDocs, (doc) => doc.pk)
-        );
+        const { study, tree } = this.props;
+        const { services } = this.context;
+
+        tree.set({
+            invites: {},
+            addToStudyScreen: {},
+            saveStudyResult: {},
+            title: study.title,
+            consentDocs: _.map(study.consentDocs, (doc) => doc.pk),
+        });
+        services.getInvitesOfStudyService(study.pk, tree.invites);
     },
 
-    saveStudy() {
-        const { tree, study } = this.props;
+    async saveStudy() {
+        const { tree, study, studiesCursor } = this.props;
+        const { services } = this.context;
 
-        this.context.services.updateStudyService(
+        await services.updateStudyService(
             study.pk,
             tree.saveStudyResult,
             {
@@ -60,6 +70,8 @@ const StudyDetail = schema(model)(React.createClass({
                 consentDocs: tree.consentDocs.get(),
             }
         );
+
+        await services.getStudiesService(studiesCursor);
     },
 
     renderDoctors(doctors) {
