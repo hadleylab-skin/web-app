@@ -187,7 +187,7 @@ export const AppRouter = schema(model)(React.createClass({
                                     tree={this.props.tree.studyDetailScreen}
                                     studiesCursor={studiesCursor}
                                     isCoordinator={isCoordinator}
-                                    doctorsCursor={doctorsCursor}
+                                    doctors={doctorsCursor.get('data')}
                                 />
                             ) : null;
                         }}

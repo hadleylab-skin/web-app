@@ -31,6 +31,7 @@ const StudyDetail = schema(model)(React.createClass({
     propTypes: {
         study: React.PropTypes.object,
         tree: BaobabPropTypes.cursor.isRequired,
+        doctors: React.PropTypes.array,
         studiesCursor: BaobabPropTypes.cursor.isRequired,
         isCoordinator: React.PropTypes.bool,
     },
@@ -230,7 +231,7 @@ const StudyDetail = schema(model)(React.createClass({
                                 <Header>Add doctor to study</Header>
                                 <AddToStudy
                                     study={study}
-                                    doctors={this.props.tree.doctors.data.get()}
+                                    doctors={this.props.doctors}
                                     tree={this.props.tree.addToStudyScreen}
                                 />
                             </Grid.Column>
