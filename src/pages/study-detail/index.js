@@ -211,9 +211,9 @@ const StudyDetail = schema(model)(React.createClass({
                                     {_.isEqual(
                                         _.map(saveStudyResult.data.consentDocs, _.clone).sort(),
                                         _.map(study.consentDocs, (doc) => doc.pk).sort()) ?
-                                        'Study successfully changed'
+                                        'The study is successfully changed'
                                     :
-                                        'Study successfully changed and all patient consents invalidated'}
+                                        'The study is successfully changed and all patient consents invalidated'}
                                 </Message.Content>
                             </Message>
                         : null}
