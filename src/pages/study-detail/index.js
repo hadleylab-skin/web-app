@@ -134,18 +134,27 @@ const StudyDetail = schema(model)(React.createClass({
 
     renderTitle() {
         const { isCoordinator } = this.props;
+        const saveStudyResult = this.props.tree.saveStudyResult.get();
 
         if (isCoordinator) {
             return (
-                <Input
-                    style={{ width: '100%' }}
-                    iconPosition="left"
-                    placeholder="Title"
-                    cursor={this.props.tree.title}
-                >
-                    <Icon name="font" />
-                    <input />
-                </Input>
+                <div>
+                    <Input
+                        style={{ width: '100%' }}
+                        iconPosition="left"
+                        placeholder="Title"
+                        cursor={this.props.tree.title}
+                    >
+                        <Icon name="font" />
+                        <input />
+                    </Input>
+
+                    {saveStudyResult.status === 'Failure' && !_.isEmpty(saveStudyResult.error.data.title) ?
+                        <div style={{ color: '#aa0000' }}>
+                            {saveStudyResult.error.data.title[0]}
+                        </div>
+                    : null}
+                </div>
             );
         }
 
