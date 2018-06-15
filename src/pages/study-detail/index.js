@@ -45,6 +45,12 @@ const StudyDetail = schema(model)(React.createClass({
         }),
     },
 
+    getInitialState() {
+        return {
+            isConsentDocsUpdated: false,
+        };
+    },
+
     componentWillMount() {
         const { study, tree } = this.props;
         const { services } = this.context;
@@ -62,6 +68,11 @@ const StudyDetail = schema(model)(React.createClass({
     async saveStudy() {
         const { tree, study, studiesCursor } = this.props;
         const { services } = this.context;
+
+        this.setState({ isConsentDocsUpdated: !_.isEqual(
+            _.map(tree.consentDocs.get(), _.clone).sort(),
+            _.map(study.consentDocs, (doc) => doc.pk).sort()
+        ) });
 
         await services.updateStudyService(
             study.pk,
@@ -184,10 +195,10 @@ const StudyDetail = schema(model)(React.createClass({
                             ['Consent docs', this.renderConsentDocs()],
                         ], (row, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell style={{width: '20%'}}>
+                                <Table.Cell style={{ width: '20%' }}>
                                     {row[0]}
                                 </Table.Cell>
-                                <Table.Cell style={{width: '80%'}}>
+                                <Table.Cell style={{ width: '80%' }}>
                                     {row[1]}
                                 </Table.Cell>
                             </Table.Row>
@@ -208,12 +219,10 @@ const StudyDetail = schema(model)(React.createClass({
                                     Success
                                 </Message.Header>
                                 <Message.Content>
-                                    {_.isEqual(
-                                        _.map(saveStudyResult.data.consentDocs, _.clone).sort(),
-                                        _.map(study.consentDocs, (doc) => doc.pk).sort()) ?
-                                        'The study is successfully changed'
+                                    {this.state.isConsentDocsUpdated ?
+                                        'The study is successfully changed and all patient consents invalidated'
                                     :
-                                        'The study is successfully changed and all patient consents invalidated'}
+                                        'The study is successfully changed'}
                                 </Message.Content>
                             </Message>
                         : null}
