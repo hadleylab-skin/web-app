@@ -161,7 +161,7 @@ const StudyDetail = schema(model)(React.createClass({
                     </Input>
 
                     {saveStudyResult.status === 'Failure' && !_.isEmpty(saveStudyResult.error.data.title) ?
-                        <div style={{ color: '#aa0000' }}>
+                        <div className={docStyles.upload_errors}>
                             {saveStudyResult.error.data.title[0]}
                         </div>
                     : null}
