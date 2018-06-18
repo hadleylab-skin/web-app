@@ -5,6 +5,7 @@ import { Input as InputUI } from 'semantic-ui-react';
 import schema from 'libs/state';
 import s from './styles.css';
 import i from './doc_icon.svg';
+import preloaderGif from './preloader.gif';
 
 
 const model = {
@@ -42,11 +43,9 @@ export const FilesInput = schema(model)(React.createClass({
 
     handleOnChange(e) {
         let errors = [];
-        this.setState({ errors });
+        this.setState({ errors, loaderStatus: 'loading' });
 
-        // loaderCursor.set('loading')
-
-        _.map(e.target.files, async (file) => {
+        const results = _.map(e.target.files, async (file) => {
             const { uploadedFiles, uploadPks } = this.state;
             const result = await this.props.uploadService(this.props.cursor, file);
             if (result.status === 'Succeed') {
@@ -59,11 +58,13 @@ export const FilesInput = schema(model)(React.createClass({
             }
         });
 
-        // loaderCursor.set('not loading')
+        Promise.all(results).then((completed) => {
+            this.setState({ loaderStatus: 'completed' });
+        });
     },
 
     render() {
-        const { uploadedFiles, errors } = this.state;
+        const { uploadedFiles, errors, loaderStatus } = this.state;
         const { cursor, uploadService, initials, ...props } = this.props;
 
         return (
@@ -72,7 +73,7 @@ export const FilesInput = schema(model)(React.createClass({
                     <div className="ui blue button">Add Files</div>
                     <InputUI
                         type="file"
-                        multiple
+                        multipleloaderStatus
                         style={{ display: 'none' }}
                         onBlur={this.syncState}
                         onChange={this.handleOnChange}
@@ -100,6 +101,11 @@ export const FilesInput = schema(model)(React.createClass({
                             {error}
                         </p>
                     ))}
+                </div>
+                <div>
+                    {loaderStatus === 'loading' ?
+                        <img src={preloaderGif} />
+                    : null}
                 </div>
             </div>
         );
