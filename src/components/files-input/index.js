@@ -2,13 +2,20 @@ import React from 'react';
 import _ from 'lodash';
 import BaobabPropTypes from 'baobab-prop-types';
 import { Input as InputUI } from 'semantic-ui-react';
+import schema from 'libs/state';
 import s from './styles.css';
 import i from './doc_icon.svg';
 
 
-export const FilesInput = React.createClass({
+const model = {
+    tree: {},
+};
+
+
+export const FilesInput = schema(model)(React.createClass({
     propTypes: {
-        cursor: BaobabPropTypes.cursor.isRequired,
+        cursor: BaobabPropTypes.cursor.isRequired,  // This cursor contains only PKS
+        tree: BaobabPropTypes.cursor.isRequired,
         initials: React.PropTypes.array,
         uploadService: React.PropTypes.func.isRequired,
     },
@@ -37,6 +44,8 @@ export const FilesInput = React.createClass({
         let errors = [];
         this.setState({ errors });
 
+        // loaderCursor.set('loading')
+
         _.map(e.target.files, async (file) => {
             const { uploadedFiles, uploadPks } = this.state;
             const result = await this.props.uploadService(this.props.cursor, file);
@@ -49,6 +58,8 @@ export const FilesInput = React.createClass({
                 this.setState({ errors });
             }
         });
+
+        // loaderCursor.set('not loading')
     },
 
     render() {
@@ -93,4 +104,4 @@ export const FilesInput = React.createClass({
             </div>
         );
     },
-});
+}));
