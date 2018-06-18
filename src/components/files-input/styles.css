@@ -5,13 +5,14 @@
 }
 
 .upload_row {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
-    position: relative;
 }
 
 .upload_row__img {
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
     margin-right: 10px;
 }
 
@@ -20,18 +21,12 @@
 }
 
 .upload_row__remove {
-    position: absolute;
-    background: #e12422;
-    color: white;
-    top: 0;
-    left: 75px;
-    width: 25px;
-    height: 25px;
-    text-align: center;
-    line-height: 23px;
-    border-left: 1px solid black;
-    border-bottom: 1px solid black;
+    padding-right: 10px;
+}
+
+.upload_row__remove img {
     cursor: pointer;
+    width: 24px;
 }
 
 .upload_errors {
