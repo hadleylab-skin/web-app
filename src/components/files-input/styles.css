@@ -13,7 +13,7 @@
 .upload_row__img {
     width: 75px;
     height: 75px;
-    margin-right: 10px;
+    margin-right: 0.78571429em;
 }
 
 .upload_row__name {
@@ -21,7 +21,7 @@
 }
 
 .upload_row__remove {
-    padding-right: 10px;
+    padding-right: 0.78571429em;
 }
 
 .upload_row__remove img {
