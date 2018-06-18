@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import BaobabPropTypes from 'baobab-prop-types';
 import {
     HashRouter,
@@ -178,14 +179,15 @@ export const AppRouter = schema(model)(React.createClass({
                         exact
                         path="/studies/:id"
                         render={(props) => {
-                            const id = parseInt(props.match.params.id);
-                            const study = _.first(_.filter(studiesCursor.data.get(), {pk: id}));
+                            const id = parseInt(props.match.params.id, 10);
+                            const study = _.first(_.filter(studiesCursor.data.get(), { pk: id }));
                             return study ? (
                                 <StudyDetailPage
                                     study={study}
-                                    tree={this.props.tree}
+                                    tree={this.props.tree.studyDetailScreen}
+                                    studiesCursor={studiesCursor}
                                     isCoordinator={isCoordinator}
-                                    doctorsCursor={doctorsCursor}
+                                    doctors={doctorsCursor.get('data')}
                                 />
                             ) : null;
                         }}

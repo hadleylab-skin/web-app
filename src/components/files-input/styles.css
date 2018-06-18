@@ -5,15 +5,31 @@
 }
 
 .upload_row {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
 }
 
 .upload_row__img {
-    width: 100px;
-    height: 100px;
-    margin-right: 10px;
+    width: 75px;
+    height: 75px;
+    margin-right: 0.78571429em;
 }
 
 .upload_row__name {
     vertical-align: bottom;
+}
+
+.upload_row__remove {
+    padding-right: 0.78571429em;
+}
+
+.upload_row__remove img {
+    cursor: pointer;
+    width: 24px;
+}
+
+.upload_errors {
+    margin-top: 10px;
+    color: #e10000;
 }

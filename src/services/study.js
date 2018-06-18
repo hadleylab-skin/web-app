@@ -40,6 +40,24 @@ export function addStudyService({ token }) {
 }
 
 
+export function updateStudyService({ token }) {
+    const headers = {
+        Authorization: `JWT ${token}`,
+    };
+
+    return (studyPk, cursor, data) => {
+        const _service = buildPostService(
+            `/api/v1/study/${studyPk}/`,
+            'PATCH',
+            hydrateStudyData,
+            _.identity,
+            _.merge({}, defaultHeaders, headers));
+
+        return _service(cursor, data);
+    };
+}
+
+
 export function addDoctorToStudyService({ token }) {
     const headers = {
         Authorization: `JWT ${token}`,

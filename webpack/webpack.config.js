@@ -8,7 +8,7 @@ const config = {
     FRONTEND_DEV_PORT: '3000',
 };
 
-const publicPath = `http://${config.FRONTEND_DEV_URL}:${config.FRONTEND_DEV_PORT}`;
+const publicPath = `http://${config.FRONTEND_DEV_URL}:${config.FRONTEND_DEV_PORT}/`;
 
 module.exports = _.merge(webpackConfig, {
     entry: {
