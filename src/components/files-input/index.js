@@ -6,6 +6,7 @@ import schema from 'libs/state';
 import s from './styles.css';
 import i from './doc_icon.svg';
 import preloaderGif from './preloader.gif';
+import trashIcon from './trash-icon.svg'
 
 
 const model = {
@@ -32,6 +33,10 @@ export const FilesInput = schema(model)(React.createClass({
     },
 
     removeItem(uploadPk) {
+        if (!confirm('Are you sure?')) {
+            return;
+        }
+
         const uploadPks = _.filter(this.state.uploadPks, (pk) => pk !== uploadPk);
         const uploadedFiles = _.filter(
             this.state.uploadedFiles,
@@ -86,12 +91,14 @@ export const FilesInput = schema(model)(React.createClass({
                 <div className={s.uploads_wrapper}>
                     {_.map(uploadedFiles, (item, index) => (
                         <div key={index} className={s.upload_row}>
+                            <div onClick={() => this.removeItem(item.pk)}
+                                 className={s.upload_row__remove}>
+                                <img src={trashIcon} />
+                            </div>
                             <a href={item.file} target="_blank">
                                 <img className={s.upload_row__img} src={item.thumbnail ? item.file : i} />
                             </a>
-                            <span className={s.upload_row__name}>{item.originalFilename}</span>
-                            <div onClick={() => this.removeItem(item.pk)}
-                                 className={s.upload_row__remove}>✘</div>
+                            <div className={s.upload_row__name}>{item.originalFilename}</div>
                         </div>
                     ))}
                 </div>
