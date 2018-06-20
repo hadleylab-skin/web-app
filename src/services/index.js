@@ -23,6 +23,7 @@ import { patientsService,
        } from './patients';
 import { getStudiesService,
          addStudyService,
+         updateStudyService,
          addDoctorToStudyService,
          getInvitesOfStudyService,
        } from './study';
@@ -53,6 +54,7 @@ export default {
     getStudiesService,
     addConsentDocService,
     addStudyService,
+    updateStudyService,
     addDoctorToStudyService,
     getInvitesOfStudyService,
 };
