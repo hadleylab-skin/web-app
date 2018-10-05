@@ -55,7 +55,7 @@ const PatientMoleList = schema(model)(React.createClass({
                     ?
                     (
                         <div><Label color="red" basic>
-                            Clinical Diagnose Required for {mole.data.imagesWithClinicalDiagnosisRequired}/{mole.data.imagesCount} images
+                            Clinical Diagnosis Required for {mole.data.imagesWithClinicalDiagnosisRequired}/{mole.data.imagesCount} images
                         </Label><br /><br /></div>
                     )
                     :
@@ -66,7 +66,7 @@ const PatientMoleList = schema(model)(React.createClass({
                     ?
                     (
                         <div><Label color="red" basic>
-                            Pathological Diagnose Required for {mole.data.imagesWithPathologicalDiagnosisRequired}/{mole.data.imagesBiopsyCount} images
+                            Pathology Diagnosis Required for {mole.data.imagesWithPathologicalDiagnosisRequired}/{mole.data.imagesBiopsyCount} images
                         </Label><br /><br /></div>
                     )
                     :
@@ -78,7 +78,7 @@ const PatientMoleList = schema(model)(React.createClass({
                     ?
                     (
                         <div><Label color="red" basic>
-                            Approve Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount} images
+                            Approval Required for {mole.data.imagesApproveRequired}/{mole.data.imagesCount} images
                         </Label><br /><br /></div>
                     )
                     :
@@ -145,8 +145,8 @@ const PatientMoleList = schema(model)(React.createClass({
                         <Table.HeaderCell>Created</Table.HeaderCell>
                         <Table.HeaderCell>Anatomical site</Table.HeaderCell>
                         <Table.HeaderCell>Last Image</Table.HeaderCell>
-                        <Table.HeaderCell>Last Path Diagnoses</Table.HeaderCell>
-                        <Table.HeaderCell>Last Clinical Diagnoses</Table.HeaderCell>
+                        <Table.HeaderCell>Last Path Diagnosis</Table.HeaderCell>
+                        <Table.HeaderCell>Last Clinical Diagnosis</Table.HeaderCell>
                         <Table.HeaderCell>Studies</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
