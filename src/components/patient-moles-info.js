@@ -17,7 +17,7 @@ export function PatientMolesInfo({ patient }) {
                 ?
                 (
                     <div><Label color="red" basic>
-                        Clinical Diagnose Required for {patient.molesImagesWithClinicalDiagnosisRequired}/{patient.molesImagesCount} images
+                        Clinical Diagnosis Required for {patient.molesImagesWithClinicalDiagnosisRequired}/{patient.molesImagesCount} images
                     </Label><br /><br /></div>
                 )
                 : null
@@ -27,7 +27,7 @@ export function PatientMolesInfo({ patient }) {
                 ?
                 (
                     <div><Label color="red" basic>
-                        Pathological Diagnose Required for {patient.molesImagesWithPathologicalDiagnosisRequired}/{patient.molesImagesBiopsyCount} images
+                        Pathology Diagnosis Required for {patient.molesImagesWithPathologicalDiagnosisRequired}/{patient.molesImagesBiopsyCount} images
                     </Label><br /><br /></div>
                 )
                 :
@@ -38,7 +38,7 @@ export function PatientMolesInfo({ patient }) {
                 ?
                 (
                     <div><Label color="red" basic>
-                        Approve required for {patient.molesImagesApproveRequired}/{patient.molesImagesCount} images
+                        Approval Required for {patient.molesImagesApproveRequired}/{patient.molesImagesCount} images
                     </Label><br /><br /></div>
                 )
                 :
