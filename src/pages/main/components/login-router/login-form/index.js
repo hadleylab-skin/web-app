@@ -9,8 +9,8 @@ import { withRouter } from 'react-router';
 
 const model = {
     tree: {
-        username: '',
-        password: '',
+        username: 'doctor@yandex.ru',
+        password: '1',
     },
 };
 
@@ -89,6 +89,12 @@ export const LoginForm = schema(model)(withRouter(React.createClass({
                     Submit
                 </Button>
                 <FormErrorMessages errorTexts={errorTexts} />
+                <div style={{ margin: '10px 0' }}>
+                    <a href="https://www.freeprivacypolicy.com/privacy/view/d2a3a4d6658dd04af75792af4676e91f"
+                       target="_blank">
+                        Private policy
+                    </a>
+                </div>
             </Form>
         );
     },
